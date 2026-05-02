@@ -6,11 +6,12 @@ const string PROMPT_CONTINUE_SHOPPING = "Продолжить покупки? (y
 
 const string MESSAGE_ERROR_EMPTY_STRING = "Ошибка: значение не может быть пустым. Попробуйте снова.";
 const string MESSAGE_ERROR_INVALID_QUANTITY = "Ошибка: неверное число товаров. Попробуйте снова.";
-const string MESSAGE_ERROR_EMPTY_STDIN = "Ошибка: поток ввода пустой";
 const string MESSAGE_ERROR_PROMPT_ANSWER = "Ошибка: Ответьте да/нет";
 
 const string MESSAGE_ORDER_CANCELLED = "Заказ отменён.";
 const string DATE_FORMAT = "dd.MM.yyyy";
+
+const int DAYS_UNTIL_DELIVERY = 3;
 
 string product;
 int quantity;
@@ -23,8 +24,7 @@ Run();
 
 void Run()
 {
-    bool run = true;
-    while ( run )
+    while ( true )
     {
         ReadProductInfo();
         ReadUserInfo();
@@ -32,7 +32,7 @@ void Run()
 
         if ( !PromptConfirmation( PROMPT_CONTINUE_SHOPPING ) )
         {
-            run = false;
+            break;
         }
     }
 
@@ -52,12 +52,11 @@ void ProcessOrder()
 
     if ( isConfirmed )
     {
-        DateTime arrivalDate = DateTime.Today.AddDays( 3 );
-        PrintSuccess( userName, product, quantity, address, arrivalDate );
+        PrintSuccess();
     }
     else
     {
-        PrintCancelled();
+        Console.WriteLine( MESSAGE_ORDER_CANCELLED );
     }
 }
 
@@ -75,7 +74,7 @@ void ReadUserInfo()
 
 string ReadLineTrimmed()
 {
-    return Console.ReadLine()?.Trim() ?? throw new EndOfStreamException( MESSAGE_ERROR_EMPTY_STDIN );
+    return Console.ReadLine()?.Trim() ?? string.Empty;
 }
 
 string ReadString( string prompt )
@@ -96,6 +95,7 @@ string ReadString( string prompt )
         }
 
     } while ( true );
+
     return result;
 }
 
@@ -116,6 +116,7 @@ int ReadQuantity( string prompt )
         }
 
     } while ( true );
+
     return result;
 }
 
@@ -147,13 +148,8 @@ bool PromptConfirmation( string message )
     } while ( true );
 }
 
-void PrintSuccess( string name, string product, int count, string address, DateTime arrivalDate )
+void PrintSuccess()
 {
-    string formattedDate = arrivalDate.ToString( DATE_FORMAT );
-    Console.WriteLine( $"{name}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} {formattedDate}" );
-}
-
-void PrintCancelled()
-{
-    Console.WriteLine( MESSAGE_ORDER_CANCELLED );
+    string formattedDate = DateTime.Today.AddDays( DAYS_UNTIL_DELIVERY ).ToString( DATE_FORMAT );
+    Console.WriteLine( $"{userName}! Ваш заказ {product} в количестве {quantity} оформлен! Ожидайте доставку по адресу {address} {formattedDate}" );
 }
