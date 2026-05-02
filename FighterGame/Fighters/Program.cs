@@ -1,11 +1,13 @@
-﻿using Fighters.Models.Races;
+﻿using Fighters;
 
-namespace Fighters;
-
-public class Program
+class Program
 {
-    public static void Main( string[] args )
+    static void Main( string[] args )
     {
-        Console.WriteLine( "Hello" );
+        Console.InputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        FightersGame instance = new FightersGame( new ConsoleEnvironment() );
+        instance.Run();
     }
 }

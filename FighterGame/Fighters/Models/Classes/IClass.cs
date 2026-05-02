@@ -1,6 +1,6 @@
-﻿namespace Fighters.Models.Races;
+﻿namespace Fighters.Models.Classes;
 
-public interface IRace : IDisplayable
+public interface IClass : IDisplayable
 {
     int Damage { get; }
     int Health { get; }
