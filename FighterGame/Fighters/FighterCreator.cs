@@ -10,103 +10,43 @@ namespace Fighters;
 class FighterCreator
 {
 
-    public static readonly IReadOnlyList<IRace> Races = new List<IRace> {
+    private static readonly IReadOnlyList<IRace> Races = new List<IRace> {
         new Human(),
         new Ghoul(),
         new Mutant()
     };
 
-    public static readonly IReadOnlyList<IClass> Classes = new List<IClass> {
+    private static readonly IReadOnlyList<IClass> Classes = new List<IClass> {
         new LegionSoldierClass(),
         new NCRTrooperClass(),
         new BrotherhoodKnight(),
         new MojaveWanderer()
     };
 
-    public static readonly IReadOnlyList<IWeapon> Weapons = new List<IWeapon> {
+    private static readonly IReadOnlyList<IWeapon> Weapons = new List<IWeapon> {
         new Fists(),
         new Axe(),
         new Machete()
     };
 
-    public static readonly IReadOnlyList<IArmor> Armors = new List<IArmor> {
+    private static readonly IReadOnlyList<IArmor> Armors = new List<IArmor> {
         new CaesarArmor(),
         new PowerArmor(),
         new CombatArmor(),
         new NoArmor()
     };
 
-    private IEnvironment _environ;
+    private readonly IEnvironment _env;
 
     public FighterCreator( IEnvironment env )
     {
-        _environ = env;
-    }
-
-    public IRace SelectRace()
-    {
-        _environ.WriteLine( "Выберите расу:" );
-
-        for ( int i = 0; i < Races.Count; i++ )
-        {
-            _environ.WriteLine( $"{i} - {Races[ i ].Name} (Сила+{Races[ i ].Damage}, Здоровье {Races[ i ].Health}, Броня {Races[ i ].Armor}, Инициатива {Races[ i ].Initiative})" );
-        }
-
-        int raceIndex = EnvironmentUtils.ReadIntInRange( _environ, 0, Races.Count - 1 );
-        IRace race = Races[ raceIndex ];
-
-        return race;
-    }
-
-    private IClass SelectFighterClass()
-    {
-        _environ.WriteLine( "Выберите класс:" );
-
-        for ( int i = 0; i < Classes.Count; i++ )
-        {
-            _environ.WriteLine( $"{i} - {Classes[ i ].Name} (Сила+{Classes[ i ].Damage}, Здоровье+{Classes[ i ].Health}, Броня+{Classes[ i ].Armor}, Инициатива+{Classes[ i ].Initiative})" );
-        }
-
-        int classIndex = EnvironmentUtils.ReadIntInRange( _environ, 0, Classes.Count - 1 );
-        IClass fighterClass = Classes[ classIndex ];
-
-        return fighterClass;
-    }
-
-    private IWeapon SelectWeapon()
-    {
-        _environ.WriteLine( "Выберите оружие:" );
-
-        for ( int i = 0; i < Weapons.Count; i++ )
-        {
-            _environ.WriteLine( $"{i} - {Weapons[ i ].Name} (Урон {Weapons[ i ].Damage})" );
-        }
-
-        int weaponIndex = EnvironmentUtils.ReadIntInRange( _environ, 0, Weapons.Count - 1 );
-        IWeapon weapon = Weapons[ weaponIndex ];
-
-        return weapon;
-    }
-
-    private IArmor SelectArmor()
-    {
-        _environ.WriteLine( "Выберите броню:" );
-
-        for ( int i = 0; i < Armors.Count; i++ )
-        {
-            _environ.WriteLine( $"{i} - {Armors[ i ].Name} (Защита {Armors[ i ].Armor})" );
-        }
-
-        int armorIndex = EnvironmentUtils.ReadIntInRange( _environ, 0, Armors.Count - 1 );
-        IArmor armor = Armors[ armorIndex ];
-
-        return armor;
+        _env = env;
     }
 
     public IFighter CreateFighter()
     {
-        _environ.Write( "Введите имя персонажа: " );
-        string name = EnvironmentUtils.ReadString( _environ );
+        _env.Write( "Введите имя персонажа: " );
+        string name = EnvironmentUtils.ReadString( _env );
 
         IRace race = SelectRace();
         IClass fighterClass = SelectFighterClass();
@@ -114,5 +54,65 @@ class FighterCreator
         IArmor armor = SelectArmor();
 
         return new Fighter( name, race, fighterClass, weapon, armor );
+    }
+
+    private IRace SelectRace()
+    {
+        _env.WriteLine( "Выберите расу:" );
+
+        for ( int i = 0; i < Races.Count; i++ )
+        {
+            _env.WriteLine( $"{i} - {Races[ i ].Name} (Сила+{Races[ i ].Damage}, Здоровье {Races[ i ].Health}, Броня {Races[ i ].Armor}, Инициатива {Races[ i ].Initiative})" );
+        }
+
+        int raceIndex = EnvironmentUtils.ReadIntInRange( _env, 0, Races.Count - 1 );
+        IRace race = Races[ raceIndex ];
+
+        return race;
+    }
+
+    private IClass SelectFighterClass()
+    {
+        _env.WriteLine( "Выберите класс:" );
+
+        for ( int i = 0; i < Classes.Count; i++ )
+        {
+            _env.WriteLine( $"{i} - {Classes[ i ].Name} (Сила+{Classes[ i ].Damage}, Здоровье+{Classes[ i ].Health}, Броня+{Classes[ i ].Armor}, Инициатива+{Classes[ i ].Initiative})" );
+        }
+
+        int classIndex = EnvironmentUtils.ReadIntInRange( _env, 0, Classes.Count - 1 );
+        IClass fighterClass = Classes[ classIndex ];
+
+        return fighterClass;
+    }
+
+    private IWeapon SelectWeapon()
+    {
+        _env.WriteLine( "Выберите оружие:" );
+
+        for ( int i = 0; i < Weapons.Count; i++ )
+        {
+            _env.WriteLine( $"{i} - {Weapons[ i ].Name} (Урон {Weapons[ i ].Damage})" );
+        }
+
+        int weaponIndex = EnvironmentUtils.ReadIntInRange( _env, 0, Weapons.Count - 1 );
+        IWeapon weapon = Weapons[ weaponIndex ];
+
+        return weapon;
+    }
+
+    private IArmor SelectArmor()
+    {
+        _env.WriteLine( "Выберите броню:" );
+
+        for ( int i = 0; i < Armors.Count; i++ )
+        {
+            _env.WriteLine( $"{i} - {Armors[ i ].Name} (Защита {Armors[ i ].Armor})" );
+        }
+
+        int armorIndex = EnvironmentUtils.ReadIntInRange( _env, 0, Armors.Count - 1 );
+        IArmor armor = Armors[ armorIndex ];
+
+        return armor;
     }
 }

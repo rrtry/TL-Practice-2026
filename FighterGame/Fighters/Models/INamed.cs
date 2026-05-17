@@ -1,6 +1,6 @@
 ﻿namespace Fighters.Models;
 
-public interface IDisplayable
+public interface INamed
 {
     public string Name { get; }
 }

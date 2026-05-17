@@ -19,10 +19,11 @@ public class FightersGame
         { CMD_REMOVE_FIGHTER, "Удалить бойца с арены" },
 
         { CMD_PLAY, "Начать битву" },
+        { CMD_HELP, "Вывести доступные команды" },
         { CMD_EXIT, "Выйти" }
     };
 
-    private IEnvironment _env;
+    private readonly IEnvironment _env;
     private Arena _arena;
     private FighterCreator _creator;
 
@@ -33,16 +34,31 @@ public class FightersGame
         _creator = new FighterCreator( _env );
     }
 
-    private void PrintMenu( IEnvironment env )
+    public void Run()
     {
-        env.WriteLine( "\nВведите команду: " );
-        foreach ( var (command, description) in Commands )
+        _env.WriteLine( GAME_TITLE );
+        PrintMenu();
+
+        while ( true )
         {
-            env.WriteLine( $"{command} - {description}" );
+            string? command = _env.ReadLine()?.Trim().ToLower();
+            if ( !ProcessCommand( command ) )
+            {
+                break;
+            }
         }
     }
 
-    public bool ProcessCommand( string? command )
+    private void PrintMenu()
+    {
+        _env.WriteLine( "\nВведите команду: " );
+        foreach ( var (command, description) in Commands )
+        {
+            _env.WriteLine( $"{command} - {description}" );
+        }
+    }
+
+    private bool ProcessCommand( string? command )
     {
         switch ( command )
         {
@@ -63,7 +79,7 @@ public class FightersGame
                 return true;
 
             case CMD_HELP:
-                PrintMenu( _env );
+                PrintMenu();
                 return true;
 
             case CMD_EXIT:
@@ -72,21 +88,6 @@ public class FightersGame
             default:
                 _env.WriteLine( "Неизвестная команда. Попробуйте снова." );
                 return true;
-        }
-    }
-
-    public void Run()
-    {
-        _env.WriteLine( GAME_TITLE );
-        PrintMenu( _env );
-
-        while ( true )
-        {
-            string? command = _env.ReadLine()?.Trim().ToLower();
-            if ( !ProcessCommand( command ) )
-            {
-                break;
-            }
         }
     }
 }

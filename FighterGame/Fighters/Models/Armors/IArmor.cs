@@ -1,6 +1,6 @@
 ﻿namespace Fighters.Models.Armors;
 
-public interface IArmor : IDisplayable
+public interface IArmor : INamed
 {
     public int Armor { get; }
 }

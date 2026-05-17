@@ -10,8 +10,8 @@ public class Fighter : IFighter
     private readonly IRace _race;
     private readonly IClass _class;
 
-    private IWeapon _weapon;
-    private IArmor _armor;
+    private readonly IWeapon _weapon;
+    private readonly IArmor _armor;
 
     private int _currentHealth;
 
@@ -29,10 +29,6 @@ public class Fighter : IFighter
 
     public int GetMaxHealth() => _race.Health + _class.Health;
     public int GetCurrentHealth() => _currentHealth;
-    public void TakeDamage( int damage )
-    {
-        _currentHealth = Math.Max( 0, _currentHealth - damage );
-    }
 
     public DamageStats TakeDamage( Random random, IFighter attacker )
     {
@@ -50,18 +46,14 @@ public class Fighter : IFighter
         bool isCritical = random.NextDouble() < 0.1;
         int finalDamage = isCritical ? randomDamage * 2 : randomDamage;
 
-        TakeDamage( finalDamage );
+        ApplyDamage( finalDamage );
 
         return new DamageStats( isCritical, finalDamage );
     }
 
     public int CalculateDamage() => _race.Damage + _class.Damage + _weapon.Damage;
     public int CalculateArmor() => _race.Armor + _class.Armor + _armor.Armor;
-
     public int GetInitiative() => _race.Initiative + _class.Initiative;
-
-    public void SetArmor( IArmor armor ) => _armor = armor;
-    public void SetWeapon( IWeapon weapon ) => _weapon = weapon;
 
     public override string ToString()
     {
@@ -70,5 +62,10 @@ public class Fighter : IFighter
                $"Раса: {_race.Name}, Здоровье: {_race.Health}, Урон: {_race.Damage}, Защита: {_race.Armor} Инициатива: {_race.Initiative}\n" +
                $"Оружие: {_weapon.Name}, Урон: {_weapon.Damage}\n" +
                $"Броня: {_armor.Name}: Защита: {_armor.Armor}\n\n";
+    }
+
+    private void ApplyDamage( int damage )
+    {
+        _currentHealth = Math.Max( 0, _currentHealth - damage );
     }
 }

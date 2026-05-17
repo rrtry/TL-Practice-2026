@@ -1,6 +1,6 @@
 ﻿namespace Fighters.Models.Weapons;
 
-public interface IWeapon : IDisplayable
+public interface IWeapon : INamed
 {
     public int Damage { get; }
 };
