@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Interfaces;
 
-public interface IWheels : IDisplay
+public interface IWheels : INamed
 {
     double WeightFactor { get; }
 }

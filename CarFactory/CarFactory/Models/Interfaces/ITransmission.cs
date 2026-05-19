@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Interfaces;
 
-public interface ITransmission : IDisplay
+public interface ITransmission : INamed
 {
     int GearCount { get; }
     double EfficiencyFactor { get; }

@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Interfaces;
 
-public interface IEngine : IDisplay
+public interface IEngine : INamed
 {
     int Horsepower { get; }
     double Displacement { get; }

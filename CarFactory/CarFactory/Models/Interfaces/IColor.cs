@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Interfaces;
 
-public interface IColor : IDisplay
+public interface IColor : INamed
 {
 
 }

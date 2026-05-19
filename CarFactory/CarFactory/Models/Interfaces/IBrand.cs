@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Interfaces;
 
-public interface IBrand : IDisplay
+public interface IBrand : INamed
 {
 
 }

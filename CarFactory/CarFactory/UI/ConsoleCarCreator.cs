@@ -18,6 +18,12 @@ public class ConsoleCarCreator : ICarCreator
         return builder.Build();
     }
 
+    public bool AskToContinue()
+    {
+        Console.Write( "\nCreate another car? (y/n): " );
+        return Console.ReadLine()?.Trim().ToLower() == "y";
+    }
+
     private CarBuilder ChoosePreset()
     {
         Console.WriteLine( "\nAvailable presets:" );
@@ -55,7 +61,7 @@ public class ConsoleCarCreator : ICarCreator
     private ITransmission ChooseTransmission() => Choose( "transmission", CarCatalog.Transmissions );
     private IWheels ChooseWheels() => Choose( "wheel type", CarCatalog.Wheels );
 
-    private static T Choose<T>( string partName, IReadOnlyList<T> options ) where T : class, IDisplay
+    private static T Choose<T>( string partName, IReadOnlyList<T> options ) where T : class, INamed
     {
         Console.WriteLine( $"\nSelect {partName}:" );
         for ( int i = 0; i < options.Count; i++ )
@@ -65,12 +71,6 @@ public class ConsoleCarCreator : ICarCreator
 
         int choice = ReadChoiceNumber( 1, options.Count );
         return options[ choice - 1 ];
-    }
-
-    public bool AskToContinue()
-    {
-        Console.Write( "\nCreate another car? (y/n): " );
-        return Console.ReadLine()?.Trim().ToLower() == "y";
     }
 
     private static int ReadChoiceNumber( int min, int max )

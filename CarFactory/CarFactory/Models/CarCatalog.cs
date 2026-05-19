@@ -11,7 +11,7 @@ namespace CarFactory.Models;
 
 public static class CarCatalog
 {
-    public static IReadOnlyList<CarPreset> Presets = new List<CarPreset>
+    public static readonly IReadOnlyList<CarPreset> Presets = new List<CarPreset>
     {
         CarConfiguration.ConfigureCitySedan(),
         CarConfiguration.ConfigureSportsHatch(),
@@ -19,39 +19,39 @@ public static class CarCatalog
         CarConfiguration.ConfigureFamilyHatchback()
     };
 
-    public static IReadOnlyList<IBrand> Brands { get; } = new List<IBrand>
+    public static readonly IReadOnlyList<IBrand> Brands = new List<IBrand>
     {
         new ToyotaBrand(),
         new BMWBrand(),
         new SubaruBrand()
     };
 
-    public static IReadOnlyList<IColor> Colors { get; } = new List<IColor>
+    public static readonly IReadOnlyList<IColor> Colors = new List<IColor>
     {
         new RedColor(),
         new BlueColor()
     };
 
-    public static IReadOnlyList<IBody> Bodies { get; } = new List<IBody>
+    public static readonly IReadOnlyList<IBody> Bodies = new List<IBody>
     {
         new SedanBody(),
         new HatchbackBody(),
         new SUVBody()
     };
 
-    public static IReadOnlyList<IEngine> Engines { get; } = new List<IEngine>
+    public static readonly IReadOnlyList<IEngine> Engines = new List<IEngine>
     {
         new PetrolEngine(),
         new DieselEngine()
     };
 
-    public static IReadOnlyList<IWheels> Wheels { get; } = new List<IWheels>
+    public static readonly IReadOnlyList<IWheels> Wheels = new List<IWheels>
     {
         new LightWheels(),
         new HeavyWheels()
     };
 
-    public static IReadOnlyList<ITransmission> Transmissions { get; } = new List<ITransmission>
+    public static readonly IReadOnlyList<ITransmission> Transmissions = new List<ITransmission>
     {
         new AutomaticTransmission(),
         new ManualTransmission()

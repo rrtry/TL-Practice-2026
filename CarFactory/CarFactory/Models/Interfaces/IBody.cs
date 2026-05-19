@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿namespace CarFactory.Models.Interfaces;
 
-namespace CarFactory.Models.Interfaces;
-
-public interface IBody : IDisplay
+public interface IBody : INamed
 {
     double AerodynamicFactor { get; }
 }

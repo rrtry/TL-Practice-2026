@@ -1,28 +1,20 @@
 ﻿using CarFactory.Models;
 using CarFactory.UI;
 
-namespace CarFactory;
+Console.Clear();
+Console.WriteLine( "Car Factory" );
 
-class Program
+ICarCreator carCreator = new ConsoleCarCreator();
+
+while ( true )
 {
-    static void Main()
+    Car car = carCreator.CreateCar();
+    Console.WriteLine( car );
+
+    if ( !carCreator.AskToContinue() )
     {
-        Console.Clear();
-        Console.WriteLine( "Car Factory" );
-
-        ICarCreator carCreator = new ConsoleCarCreator();
-
-        while ( true )
-        {
-            Car car = carCreator.CreateCar();
-            Console.WriteLine( car );
-
-            if ( !carCreator.AskToContinue() )
-            {
-                break;
-            }
-        }
-
-        Console.WriteLine( "\nBye. " );
+        break;
     }
 }
+
+Console.WriteLine( "\nBye. " );

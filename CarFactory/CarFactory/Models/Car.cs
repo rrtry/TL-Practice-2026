@@ -4,13 +4,13 @@ namespace CarFactory.Models;
 
 public class Car
 {
-    public IBrand Brand { get; }
-    public IColor Color { get; }
-    public IBody Body { get; }
-    public IEngine Engine { get; }
-    public ITransmission Transmission { get; }
-    public IWheels Wheels { get; }
-    public int MaxSpeed { get; }
+    private IBrand _brand;
+    private IColor _color;
+    private IBody _body;
+    private IEngine _engine;
+    private ITransmission _transmission;
+    private IWheels _wheels;
+    private int _maxSpeed;
 
     public Car(
         IBrand brand,
@@ -20,13 +20,25 @@ public class Car
         ITransmission transmission,
         IWheels wheels )
     {
-        Brand = brand;
-        Color = color;
-        Body = body;
-        Engine = engine;
-        Transmission = transmission;
-        Wheels = wheels;
-        MaxSpeed = CalculateMaxSpeed();
+        _brand = brand;
+        _color = color;
+        _body = body;
+        _engine = engine;
+        _transmission = transmission;
+        _wheels = wheels;
+        _maxSpeed = CalculateMaxSpeed();
+    }
+
+    public override string ToString()
+    {
+        return $"\nCar: \n" +
+               $"Brand:           {_brand.Name}\n" +
+               $"Color:           {_color.Name}\n" +
+               $"Body type:       {_body.Name}\n" +
+               $"Engine:          {_engine.Name} ({_engine.Horsepower} HP, {_engine.Displacement}L)\n" +
+               $"Transmission:    {_transmission.Name} ({_transmission.GearCount} gears)\n" +
+               $"Wheels:          {_wheels.Name}\n" +
+               $"Max speed:       {_maxSpeed} km/h\n";
     }
 
     private int CalculateMaxSpeed()
@@ -36,27 +48,15 @@ public class Car
         const double maxGearBonus = 0.1;
         const double gearBonusFactor = 0.01;
 
-        double speed = Engine.Horsepower * horsePowerFactor;
+        double speed = _engine.Horsepower * horsePowerFactor;
 
-        speed *= Body.AerodynamicFactor;
-        speed *= Transmission.EfficiencyFactor;
-        speed *= Wheels.WeightFactor;
+        speed *= _body.AerodynamicFactor;
+        speed *= _transmission.EfficiencyFactor;
+        speed *= _wheels.WeightFactor;
 
-        double gearBonus = 1 + Math.Min( maxGearBonus, ( Transmission.GearCount - minGearCount ) * gearBonusFactor );
+        double gearBonus = 1 + Math.Min( maxGearBonus, ( _transmission.GearCount - minGearCount ) * gearBonusFactor );
         speed *= gearBonus;
 
         return ( int )Math.Round( speed );
-    }
-
-    public override string ToString()
-    {
-        return $"\nCar: \n" +
-               $"Brand:           {Brand.Name}\n" +
-               $"Color:           {Color.Name}\n" +
-               $"Body type:       {Body.Name}\n" +
-               $"Engine:          {Engine.Name} ({Engine.Horsepower} HP, {Engine.Displacement}L)\n" +
-               $"Transmission:    {Transmission.Name} ({Transmission.GearCount} gears)\n" +
-               $"Wheels:          {Wheels.Name}\n" +
-               $"Max speed:       {MaxSpeed} km/h\n";
     }
 }
