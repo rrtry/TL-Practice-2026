@@ -46,7 +46,7 @@ void PrintMenu()
 OptionHandleResult HandleOptions()
 {
     string input = Console.ReadLine() ?? "";
-    if ( int.TryParse( input, out int result ) )
+    if ( int.TryParse( input, out int result ) && Enum.IsDefined( typeof( MenuOption ), result ) )
     {
         MenuOption option = ( MenuOption )result;
         switch ( option )
@@ -76,7 +76,7 @@ OptionHandleResult MakeDeposit()
     Console.Write( "Enter amount: " );
     string depositString = Console.ReadLine()!;
 
-    if ( !ParsePositiveDecimal( depositString, out decimal deposit ) )
+    if ( !TryParsePositiveDecimal( depositString, out decimal deposit ) )
     {
         return OptionHandleResult.InvalidDepositValue;
     }
@@ -91,12 +91,12 @@ OptionHandleResult ShowBalance()
     return OptionHandleResult.Success;
 }
 
-bool MakeBet( out decimal bet )
+bool TryMakeBet( out decimal bet )
 {
     Console.Write( "Your bet is: " );
     string betStr = Console.ReadLine()!;
 
-    if ( !ParsePositiveDecimal( betStr, out bet ) )
+    if ( !TryParsePositiveDecimal( betStr, out bet ) )
     {
         return false;
     }
@@ -112,7 +112,7 @@ bool MakeBet( out decimal bet )
 OptionHandleResult Play()
 {
     decimal bet;
-    if ( !MakeBet( out bet ) )
+    if ( !TryMakeBet( out bet ) )
     {
         return OptionHandleResult.InvalidBet;
     }
@@ -149,7 +149,7 @@ decimal CalculateWinAmount( decimal bet, int seed )
     return bet * ( 1 + winPrecent / 100 );
 }
 
-static bool ParsePositiveDecimal( string input, out decimal result )
+bool TryParsePositiveDecimal( string input, out decimal result )
 {
     if ( decimal.TryParse( input, out result ) && result > 0 )
     {

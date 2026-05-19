@@ -1,6 +1,6 @@
 ﻿namespace Casino;
 
-enum OptionHandleResult
+public enum OptionHandleResult
 {
     Success,
     InvalidOption,

@@ -1,6 +1,6 @@
 ﻿namespace Casino;
 
-enum MenuOption
+public enum MenuOption
 {
     MakeDeposit,
     ShowBalance,
