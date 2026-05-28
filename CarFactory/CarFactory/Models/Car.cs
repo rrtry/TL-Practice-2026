@@ -1,4 +1,9 @@
-﻿using CarFactory.Models.Interfaces;
+﻿using CarFactory.Models.Bodies;
+using CarFactory.Models.Brands;
+using CarFactory.Models.Colors;
+using CarFactory.Models.Engines;
+using CarFactory.Models.Transmissions;
+using CarFactory.Models.Wheels;
 
 namespace CarFactory.Models;
 

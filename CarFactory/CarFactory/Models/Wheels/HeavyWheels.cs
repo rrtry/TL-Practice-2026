@@ -1,6 +1,4 @@
-﻿using CarFactory.Models.Interfaces;
-
-namespace CarFactory.Models.Implementations.Wheels;
+﻿namespace CarFactory.Models.Wheels;
 
 public class HeavyWheels : IWheels
 {

@@ -1,11 +1,10 @@
 ﻿using CarFactory.Models;
-using CarFactory.Models.Implementations.Bodies;
-using CarFactory.Models.Implementations.Brands;
-using CarFactory.Models.Implementations.Colors;
-using CarFactory.Models.Implementations.Engines;
-using CarFactory.Models.Implementations.Transmissions;
-using CarFactory.Models.Implementations.Wheels;
-using CarFactory.Models.Interfaces;
+using CarFactory.Models.Bodies;
+using CarFactory.Models.Brands;
+using CarFactory.Models.Colors;
+using CarFactory.Models.Engines;
+using CarFactory.Models.Transmissions;
+using CarFactory.Models.Wheels;
 
 namespace CarFactory.Factory;
 

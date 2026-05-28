@@ -1,6 +1,4 @@
-﻿using CarFactory.Models.Interfaces;
-
-namespace CarFactory.Models.Implementations.Transmissions;
+﻿namespace CarFactory.Models.Transmissions;
 
 public class ManualTransmission : ITransmission
 {

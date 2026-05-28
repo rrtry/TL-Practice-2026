@@ -1,4 +1,4 @@
-﻿namespace CarFactory.Models.Interfaces;
+﻿namespace CarFactory.Models.Wheels;
 
 public interface IWheels : INamed
 {

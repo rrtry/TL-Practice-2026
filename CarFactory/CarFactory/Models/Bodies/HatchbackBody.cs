@@ -1,6 +1,4 @@
-﻿using CarFactory.Models.Interfaces;
-
-namespace CarFactory.Models.Implementations.Bodies;
+﻿namespace CarFactory.Models.Bodies;
 
 public class HatchbackBody : IBody
 {
