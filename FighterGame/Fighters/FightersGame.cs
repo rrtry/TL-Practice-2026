@@ -12,7 +12,7 @@ public class FightersGame
     private const string CMD_EXIT = "exit";
     private const string CMD_HELP = "help";
 
-    private readonly static Dictionary<string, string> Commands = new Dictionary<string, string>
+    private readonly Dictionary<string, string> Commands = new Dictionary<string, string>
     {
         { CMD_ADD_FIGHTER,  "Добавить нового бойца на арену" },
         { CMD_LIST_FIGHTERS, "Вывести список бойцов на арене" },

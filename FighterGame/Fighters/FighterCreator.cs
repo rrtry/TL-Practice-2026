@@ -7,9 +7,8 @@ using Fighters.Utils;
 
 namespace Fighters;
 
-class FighterCreator
+public class FighterCreator
 {
-
     private static readonly IReadOnlyList<IRace> Races = new List<IRace> {
         new Human(),
         new Ghoul(),

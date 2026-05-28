@@ -29,6 +29,9 @@ public class Fighter : IFighter
 
     public int GetMaxHealth() => _race.Health + _class.Health;
     public int GetCurrentHealth() => _currentHealth;
+    public int CalculateDamage() => _race.Damage + _class.Damage + _weapon.Damage;
+    public int CalculateArmor() => _race.Armor + _class.Armor + _armor.Armor;
+    public int GetInitiative() => _race.Initiative + _class.Initiative;
 
     public DamageStats TakeDamage( Random random, IFighter attacker )
     {
@@ -50,10 +53,6 @@ public class Fighter : IFighter
 
         return new DamageStats( isCritical, finalDamage );
     }
-
-    public int CalculateDamage() => _race.Damage + _class.Damage + _weapon.Damage;
-    public int CalculateArmor() => _race.Armor + _class.Armor + _armor.Armor;
-    public int GetInitiative() => _race.Initiative + _class.Initiative;
 
     public override string ToString()
     {

@@ -2,10 +2,10 @@
 
 public interface IFighter : INamed
 {
-    public int GetCurrentHealth();
-    public int GetMaxHealth();
-    public int CalculateDamage();
-    public int CalculateArmor();
-    public int GetInitiative();
-    public DamageStats TakeDamage( Random random, IFighter attacker );
+    int GetCurrentHealth();
+    int GetMaxHealth();
+    int CalculateDamage();
+    int CalculateArmor();
+    int GetInitiative();
+    DamageStats TakeDamage( Random random, IFighter attacker );
 }

@@ -13,9 +13,9 @@ public class Arena
     private readonly List<IFighter> _fighters = new();
     private List<IFighter> _alive = new();
 
-    public Arena( IEnvironment environment )
+    public Arena( IEnvironment env )
     {
-        _env = environment;
+        _env = env;
     }
 
     public void SimulateBattle()
@@ -27,7 +27,7 @@ public class Arena
         }
 
         int round = 0;
-        _alive = _fighters.Where( f => f.GetCurrentHealth() > 0 ).ToList();
+        _alive = _fighters.FindAll( f => f.GetCurrentHealth() > 0 ).ToList();
 
         while ( _alive.Count > 1 && round <= MAX_ROUNDS )
         {
