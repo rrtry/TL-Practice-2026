@@ -27,7 +27,7 @@ public class Arena
         }
 
         int round = 0;
-        _alive = _fighters.FindAll( f => f.GetCurrentHealth() > 0 ).ToList();
+        _alive = _fighters.FindAll( f => f.GetCurrentHealth() > 0 );
 
         while ( _alive.Count > 1 && round <= MAX_ROUNDS )
         {
