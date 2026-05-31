@@ -17,7 +17,7 @@ public class SearchService : ISearchService
         _reservationRepository = reservationRepository;
     }
 
-    public async Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( string? city, DateTime arrivalDate, DateTime departureDate, int guests, decimal? maxPrice )
+    public async Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( string? city, DateOnly arrivalDate, DateOnly departureDate, int guests, decimal? maxPrice )
     {
         if ( arrivalDate >= departureDate )
         {
@@ -38,19 +38,25 @@ public class SearchService : ISearchService
             {
                 // Фильтрация по кол-ву гостей
                 if ( guests < rt.MinPersonCount || guests > rt.MaxPersonCount )
+                {
                     continue;
+                }
 
                 // Фильтрация по цене
                 if ( maxPrice.HasValue && rt.DailyPrice > maxPrice.Value )
+                {
                     continue;
+                }
 
                 // Доступность
                 var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( rt.Id, arrivalDate, departureDate );
                 if ( overlapping >= rt.AvailableRoomsCount )
+                {
                     continue;
+                }
 
                 // Подсчёт цены
-                int nights = ( departureDate - arrivalDate ).Days;
+                int nights = departureDate.DayNumber - arrivalDate.DayNumber;
                 decimal total = rt.DailyPrice * nights;
 
                 results.Add( new SearchResultItem

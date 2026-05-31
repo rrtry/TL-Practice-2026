@@ -11,10 +11,16 @@ public class CreateReservationRequest
     public Guid RoomTypeId { get; set; }
 
     [Required]
-    public DateTime ArrivalDate { get; set; }
+    public DateOnly ArrivalDate { get; set; }
 
     [Required]
-    public DateTime DepartureDate { get; set; }
+    public DateOnly DepartureDate { get; set; }
+
+    [Required]
+    public TimeOnly ArrivalTime { get; set; }
+
+    [Required]
+    public TimeOnly DepartureTime { get; set; }
 
     [Required]
     [StringLength( 255, MinimumLength = 1, ErrorMessage = "GuestName length must be in range [1:255]" )]

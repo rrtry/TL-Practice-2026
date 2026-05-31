@@ -4,5 +4,5 @@ using Domain.Models;
 
 public interface ISearchService
 {
-    Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( string? city, DateTime arrivalDate, DateTime departureDate, int guests, decimal? maxPrice );
+    Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( string? city, DateOnly arrivalDate, DateOnly departureDate, int guests, decimal? maxPrice );
 }

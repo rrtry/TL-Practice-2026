@@ -13,6 +13,8 @@ public static class ReservationMapper
             RoomTypeId = request.RoomTypeId,
             ArrivalDate = request.ArrivalDate,
             DepartureDate = request.DepartureDate,
+            ArrivalTime = request.ArrivalTime,
+            DepartureTime = request.DepartureTime,
             GuestName = request.GuestName,
             GuestPhoneNumber = request.GuestPhoneNumber,
             GuestCount = request.GuestCount
@@ -28,6 +30,8 @@ public static class ReservationMapper
             RoomTypeId = created.RoomTypeId,
             ArrivalDate = created.ArrivalDate,
             DepartureDate = created.DepartureDate,
+            ArrivalTime = created.ArrivalTime,
+            DepartureTime = created.DepartureTime,
             GuestName = created.GuestName,
             GuestPhoneNumber = created.GuestPhoneNumber,
             GuestCount = created.GuestCount,

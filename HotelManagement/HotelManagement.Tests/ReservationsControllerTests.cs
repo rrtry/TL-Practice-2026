@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Domain.Entities;
 using HotelManagement.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +19,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = property.Id,
             RoomTypeId = roomType.Id,
-            ArrivalDate = DateTime.Today.AddDays( 10 ),
-            DepartureDate = DateTime.Today.AddDays( 15 ), // 5 nights
+            ArrivalDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 10 ) ),
+            DepartureDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 15 ) ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "John Doe",
             GuestPhoneNumber = "+1234567890",
             GuestCount = 2
@@ -49,11 +50,11 @@ public class ReservationsControllerTests : IntegrationTestBase
         var property = await CreatePropertyAsync( "Hotel" );
         var roomType = await CreateRoomTypeAsync( property.Id, "Single", availableRooms: 1 );
 
-        var arrival = DateTime.Today.AddDays( 5 );
-        var departure = DateTime.Today.AddDays( 7 );
+        var arrivalDateTime = DateTime.Today.AddDays( 5 );
+        var departureDateTime = DateTime.Today.AddDays( 7 );
 
         // First reservation
-        var created = await CreateReservationAsync( property.Id, roomType.Id, arrival, departure );
+        var created = await CreateReservationAsync( property.Id, roomType.Id, arrivalDateTime, departureDateTime );
 
         // Verify
         var getResponse = await _client.GetAsync( $"/api/reservations/{created.Id}" );
@@ -65,8 +66,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = property.Id,
             RoomTypeId = roomType.Id,
-            ArrivalDate = arrival,
-            DepartureDate = departure,
+            ArrivalDate = DateOnly.FromDateTime( arrivalDateTime ),
+            DepartureDate = DateOnly.FromDateTime( departureDateTime ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "Second Guest",
             GuestPhoneNumber = "+123456789",
             GuestCount = 1
@@ -91,8 +94,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = property.Id,
             RoomTypeId = roomType.Id,
-            ArrivalDate = DateTime.Today.AddDays( 5 ),
-            DepartureDate = DateTime.Today.AddDays( 3 ),
+            ArrivalDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 5 ) ),
+            DepartureDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 3 ) ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "Invalid",
             GuestPhoneNumber = "123",
             GuestCount = 1
@@ -122,8 +127,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = property.Id,
             RoomTypeId = roomType.Id,
-            ArrivalDate = DateTime.Today.AddDays( 1 ),
-            DepartureDate = DateTime.Today.AddDays( 2 ),
+            ArrivalDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 1 ) ),
+            DepartureDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 2 ) ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "Too Many",
             GuestPhoneNumber = "123",
             GuestCount = 5 // exceeds max
@@ -148,8 +155,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = Guid.NewGuid(),
             RoomTypeId = roomType.Id,
-            ArrivalDate = DateTime.Today.AddDays( 1 ),
-            DepartureDate = DateTime.Today.AddDays( 3 ),
+            ArrivalDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 1 ) ),
+            DepartureDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 3 ) ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "Guest",
             GuestPhoneNumber = "123",
             GuestCount = 1
@@ -175,8 +184,10 @@ public class ReservationsControllerTests : IntegrationTestBase
         {
             PropertyId = property.Id,
             RoomTypeId = Guid.NewGuid(),
-            ArrivalDate = DateTime.Today.AddDays( 1 ),
-            DepartureDate = DateTime.Today.AddDays( 3 ),
+            ArrivalDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 1 ) ),
+            DepartureDate = DateOnly.FromDateTime( DateTime.Today.AddDays( 3 ) ),
+            ArrivalTime = new TimeOnly( 12, 0 ),
+            DepartureTime = new TimeOnly( 14, 0 ),
             GuestName = "Guest",
             GuestPhoneNumber = "123",
             GuestCount = 1

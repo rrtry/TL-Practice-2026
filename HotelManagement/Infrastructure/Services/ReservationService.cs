@@ -36,7 +36,7 @@ public class ReservationService : IReservationService
         await ValidateAvailabilityAsync( roomType.Id, reservation.ArrivalDate, reservation.DepartureDate, roomType.AvailableRoomsCount );
 
         // Цена
-        int nights = ( reservation.DepartureDate - reservation.ArrivalDate ).Days;
+        int nights = reservation.DepartureDate.DayNumber - reservation.ArrivalDate.DayNumber;
         decimal dailyPrice = roomType.DailyPrice;
 
         reservation.Total = dailyPrice * nights;
@@ -47,7 +47,7 @@ public class ReservationService : IReservationService
         return reservation;
     }
 
-    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( Guid? propertyId, DateTime? fromDate, DateTime? toDate, string? guestName ) =>
+    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( Guid? propertyId, DateOnly? fromDate, DateOnly? toDate, string? guestName ) =>
         await _reservationRepository.GetFilteredAsync( propertyId, fromDate, toDate, guestName );
 
     public async Task<Reservation?> GetReservationByIdAsync( Guid id ) =>
@@ -104,7 +104,7 @@ public class ReservationService : IReservationService
         }
     }
 
-    private async Task ValidateAvailabilityAsync( Guid roomTypeId, DateTime arrival, DateTime departure, int availableRoomsCount )
+    private async Task ValidateAvailabilityAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure, int availableRoomsCount )
     {
         var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( roomTypeId, arrival, departure );
         if ( overlapping >= availableRoomsCount )

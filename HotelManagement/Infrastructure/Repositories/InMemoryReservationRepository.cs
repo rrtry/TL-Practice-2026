@@ -28,7 +28,7 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.CompletedTask;
     }
 
-    public Task<int> GetOverlappingReservationsCountAsync( Guid roomTypeId, DateTime arrival, DateTime departure )
+    public Task<int> GetOverlappingReservationsCountAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure )
     {
         var count = _reservations.Values.Count( r =>
             r.RoomTypeId == roomTypeId &&
@@ -38,7 +38,7 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.FromResult( count );
     }
 
-    public Task<IEnumerable<Reservation>> GetFilteredAsync( Guid? propertyId, DateTime? fromDate, DateTime? toDate, string? guestName )
+    public Task<IEnumerable<Reservation>> GetFilteredAsync( Guid? propertyId, DateOnly? fromDate, DateOnly? toDate, string? guestName )
     {
         var query = _reservations.Values.AsQueryable();
         if ( propertyId.HasValue )

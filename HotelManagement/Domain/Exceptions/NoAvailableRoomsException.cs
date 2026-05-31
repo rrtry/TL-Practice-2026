@@ -3,10 +3,10 @@
 public class NoAvailableRoomsException : DomainException
 {
     public Guid RoomTypeId { get; }
-    public DateTime ArrivalDate { get; }
-    public DateTime DepartureDate { get; }
+    public DateOnly ArrivalDate { get; }
+    public DateOnly DepartureDate { get; }
 
-    public NoAvailableRoomsException( Guid roomTypeId, DateTime arrival, DateTime departure )
+    public NoAvailableRoomsException( Guid roomTypeId, DateOnly arrival, DateOnly departure )
         : base( $"No available rooms of type '{roomTypeId}' for period {arrival:d} - {departure:d}." )
     {
         RoomTypeId = roomTypeId;

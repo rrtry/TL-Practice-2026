@@ -5,10 +5,10 @@ public class Reservation
     public Guid Id { get; set; }
     public Guid PropertyId { get; set; }
     public Guid RoomTypeId { get; set; }
-    public DateTime ArrivalDate { get; set; }
-    public DateTime DepartureDate { get; set; }
-    public string ArrivalTime { get; set; } = "14:00";
-    public string DepartureTime { get; set; } = "12:00";
+    public DateOnly ArrivalDate { get; set; }
+    public DateOnly DepartureDate { get; set; }
+    public TimeOnly ArrivalTime { get; set; }
+    public TimeOnly DepartureTime { get; set; }
     public string GuestName { get; set; } = string.Empty;
     public string GuestPhoneNumber { get; set; } = string.Empty;
     public decimal Total { get; set; }
