@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 
-namespace HotelBookingApi.Infrastructure.Repositories;
+namespace Infrastructure.Repositories;
 
 public class InMemoryReservationRepository : IReservationRepository
 {
@@ -41,7 +41,6 @@ public class InMemoryReservationRepository : IReservationRepository
     public Task<IEnumerable<Reservation>> GetFilteredAsync( Guid? propertyId, DateTime? fromDate, DateTime? toDate, string? guestName )
     {
         var query = _reservations.Values.AsQueryable();
-
         if ( propertyId.HasValue )
         {
             query = query.Where( r => r.PropertyId == propertyId.Value );

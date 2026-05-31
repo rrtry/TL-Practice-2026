@@ -12,7 +12,4 @@ public class RoomType
     public int AvailableRoomsCount { get; set; }
     public List<string> Services { get; set; } = new();
     public List<string> Amenities { get; set; } = new();
-
-    /*
-    public Property? Property { get; set; } */
 }

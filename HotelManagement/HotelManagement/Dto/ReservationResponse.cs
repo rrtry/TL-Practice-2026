@@ -7,8 +7,6 @@ public class ReservationResponse
     public Guid RoomTypeId { get; set; }
     public DateTime ArrivalDate { get; set; }
     public DateTime DepartureDate { get; set; }
-    public string ArrivalTime { get; set; } = string.Empty;
-    public string DepartureTime { get; set; } = string.Empty;
     public string GuestName { get; set; } = string.Empty;
     public string GuestPhoneNumber { get; set; } = string.Empty;
     public int GuestCount { get; set; }

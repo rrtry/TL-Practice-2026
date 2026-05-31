@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 
-namespace HotelBookingApi.Infrastructure.Repositories;
+namespace Infrastructure.Repositories;
 
 public class InMemoryRoomTypeRepository : IRoomTypeRepository
 {
