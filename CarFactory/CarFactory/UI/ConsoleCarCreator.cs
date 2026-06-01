@@ -41,7 +41,8 @@ public class ConsoleCarCreator : ICarCreator
 
         int choice = ReadChoiceNumber( 1, CarCatalog.Presets.Count );
         var selectedPreset = CarCatalog.Presets[ choice - 1 ];
-        return selectedPreset.Configuration;
+
+        return selectedPreset.CreateBuilder(); // Каждый раз создаётся новый builder.
     }
 
     private CarBuilder BuildManually()
@@ -49,14 +50,13 @@ public class ConsoleCarCreator : ICarCreator
         var builder = new CarBuilder();
         Console.WriteLine( "\nManual configuration" );
 
-        builder.SetBrand( ChooseBrand() );
-        builder.SetColor( ChooseColor() );
-        builder.SetBody( ChooseBody() );
-        builder.SetEngine( ChooseEngine() );
-        builder.SetTransmission( ChooseTransmission() );
-        builder.SetWheels( ChooseWheels() );
-
-        return builder;
+        return builder
+            .SetBrand( ChooseBrand() )
+            .SetColor( ChooseColor() )
+            .SetBody( ChooseBody() )
+            .SetEngine( ChooseEngine() )
+            .SetTransmission( ChooseTransmission() )
+            .SetWheels( ChooseWheels() );
     }
 
     private IBrand ChooseBrand() => Choose( "brand", CarCatalog.Brands );

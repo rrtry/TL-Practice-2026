@@ -8,23 +8,20 @@ using CarFactory.Models.Wheels;
 
 namespace CarFactory.Factory;
 
+/// <summary>
+/// Builder для создания экземпляров авто. Используется единожды для создания каждого экземпляра.
+/// </summary>
 public class CarBuilder
 {
-    private IBrand _brand;
-    private IColor _color;
-    private IBody _body;
-    private IEngine _engine;
-    private ITransmission _transmission;
-    private IWheels _wheels;
+    private IBrand? _brand;
+    private IColor? _color;
+    private IBody? _body;
+    private IEngine? _engine;
+    private ITransmission? _transmission;
+    private IWheels? _wheels;
 
     public CarBuilder()
     {
-        _brand = new ToyotaBrand();
-        _color = new BlueColor();
-        _body = new SedanBody();
-        _engine = new PetrolEngine();
-        _transmission = new AutomaticTransmission();
-        _wheels = new LightWheels();
     }
 
     public CarBuilder SetBrand( IBrand brand )
@@ -65,6 +62,12 @@ public class CarBuilder
 
     public Car Build()
     {
+        if ( _brand == null || _color == null || _body == null ||
+            _engine == null || _transmission == null || _wheels == null )
+        {
+            throw new InvalidOperationException( "Cannot build a car: not all components are set. " );
+        }
+
         return new Car( _brand, _color, _body, _engine, _transmission, _wheels );
     }
 }

@@ -58,48 +58,60 @@ public static class CarCatalog
     public static CarPreset ConfigureCitySedan() =>
         new CarPreset(
             "City Sedan",
-            new CarBuilder()
+            () =>
+            {
+                return new CarBuilder()
                 .SetBrand( new ToyotaBrand() )
                 .SetColor( new BlueColor() )
                 .SetBody( new SedanBody() )
                 .SetEngine( new PetrolEngine() )
                 .SetTransmission( new AutomaticTransmission() )
-                .SetWheels( new LightWheels() )
+                .SetWheels( new LightWheels() );
+            }
         );
 
     public static CarPreset ConfigureSportsHatch() =>
         new CarPreset(
             "Sports Hatch",
-            new CarBuilder()
+            () =>
+            {
+                return new CarBuilder()
                 .SetBrand( new BMWBrand() )
                 .SetColor( new RedColor() )
                 .SetBody( new HatchbackBody() )
                 .SetEngine( new PetrolEngine() )
                 .SetTransmission( new ManualTransmission() )
-                .SetWheels( new LightWheels() )
+                .SetWheels( new LightWheels() );
+            }
         );
 
     public static CarPreset ConfigureSUVOffroad() =>
         new CarPreset(
             "SUV Offroad",
-            new CarBuilder()
+            () =>
+            {
+                return new CarBuilder()
                 .SetBrand( new ToyotaBrand() )
                 .SetColor( new BlueColor() )
                 .SetBody( new SUVBody() )
                 .SetEngine( new DieselEngine() )
                 .SetTransmission( new AutomaticTransmission() )
-                .SetWheels( new HeavyWheels() )
+                .SetWheels( new HeavyWheels() );
+            }
         );
 
     public static CarPreset ConfigureFamilyHatchback() =>
         new CarPreset(
             "Family Hatchback",
-            new CarBuilder()
+            () =>
+            {
+                return new CarBuilder()
                 .SetBrand( new SubaruBrand() )
                 .SetColor( new BlueColor() )
                 .SetBody( new HatchbackBody() )
                 .SetEngine( new PetrolEngine() )
                 .SetTransmission( new ManualTransmission() )
-                .SetWheels( new LightWheels() )
+                .SetWheels( new LightWheels() );
+            }
         );
 }
