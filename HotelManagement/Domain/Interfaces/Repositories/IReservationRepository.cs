@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Filters;
 
 namespace Domain.Interfaces.Repositories;
 
@@ -9,5 +10,5 @@ public interface IReservationRepository
     Task AddAsync( Reservation reservation );
     Task DeleteAsync( Guid id );
     Task<int> GetOverlappingReservationsCountAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure );
-    Task<IEnumerable<Reservation>> GetFilteredAsync( Guid? propertyId, DateOnly? fromDate, DateOnly? toDate, string? guestName );
+    Task<IEnumerable<Reservation>> GetFilteredAsync( ReservationFilter filter );
 }

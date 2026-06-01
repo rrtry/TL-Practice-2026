@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Filters;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 
@@ -47,8 +48,8 @@ public class ReservationService : IReservationService
         return reservation;
     }
 
-    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( Guid? propertyId, DateOnly? fromDate, DateOnly? toDate, string? guestName ) =>
-        await _reservationRepository.GetFilteredAsync( propertyId, fromDate, toDate, guestName );
+    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( ReservationFilter filter ) =>
+        await _reservationRepository.GetFilteredAsync( filter );
 
     public async Task<Reservation?> GetReservationByIdAsync( Guid id ) =>
         await _reservationRepository.GetByIdAsync( id );

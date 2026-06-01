@@ -163,6 +163,7 @@ public class RoomTypesControllerTests : IntegrationTestBase
         // Verify
         var getResponse = await _client.GetAsync( $"/api/roomtypes/{roomType.Id}" );
         var updated = await getResponse.Content.ReadFromJsonAsync<RoomTypeResponse>();
+
         Assert.Equal( "New Name", updated?.Name );
         Assert.Equal( 300m, updated?.DailyPrice );
         Assert.Equal( "GBP", updated?.Currency );

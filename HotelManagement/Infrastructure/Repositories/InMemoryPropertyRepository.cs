@@ -14,6 +14,11 @@ public class InMemoryPropertyRepository : IPropertyRepository
     public Task<Property?> GetByIdAsync( Guid id ) =>
         Task.FromResult( _properties.TryGetValue( id, out var prop ) ? prop : null );
 
+    public Task<IEnumerable<Property>> GetByCityAsync( string city ) =>
+        Task.FromResult( _properties.Values.Where( p =>
+            p.City.Equals( city, StringComparison.OrdinalIgnoreCase ) )
+        );
+
     public Task AddAsync( Property property )
     {
         property.Id = Guid.NewGuid();

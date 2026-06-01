@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Domain.Entities;
+using Domain.Filters;
 using Domain.Interfaces.Repositories;
 
 namespace Infrastructure.Repositories;
@@ -38,9 +39,14 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.FromResult( count );
     }
 
-    public Task<IEnumerable<Reservation>> GetFilteredAsync( Guid? propertyId, DateOnly? fromDate, DateOnly? toDate, string? guestName )
+    public Task<IEnumerable<Reservation>> GetFilteredAsync( ReservationFilter filter )
     {
         var query = _reservations.Values.AsQueryable();
+        var propertyId = filter.PropertyId;
+        var fromDate = filter.FromDate;
+        var toDate = filter.ToDate;
+        var guestName = filter.GuestName;
+
         if ( propertyId.HasValue )
         {
             query = query.Where( r => r.PropertyId == propertyId.Value );

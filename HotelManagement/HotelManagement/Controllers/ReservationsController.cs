@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.Filters;
+using Domain.Interfaces.Services;
 using HotelManagement.Dto;
 using HotelManagement.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +33,10 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll( [FromQuery] Guid? propertyId, [FromQuery] DateOnly? fromDate, [FromQuery] DateOnly? toDate, [FromQuery] string? guestName )
+    public async Task<IActionResult> GetAll( [FromQuery] ReservationFilter filter )
     {
-        var reservations = await _reservationService.GetFilteredReservationsAsync( propertyId, fromDate, toDate, guestName );
-        var responses = reservations.Select( r => ReservationMapper.MapEntityToResponse( r ) );
+        var reservations = await _reservationService.GetFilteredReservationsAsync( filter );
+        var responses = reservations.Select( ReservationMapper.MapEntityToResponse );
 
         return Ok( responses );
     }

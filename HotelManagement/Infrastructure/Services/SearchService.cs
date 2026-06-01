@@ -1,4 +1,6 @@
-﻿using Domain.Interfaces.Repositories;
+﻿using Domain.Exceptions;
+using Domain.Filters;
+using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
 
@@ -17,46 +19,43 @@ public class SearchService : ISearchService
         _reservationRepository = reservationRepository;
     }
 
-    public async Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( string? city, DateOnly arrivalDate, DateOnly departureDate, int guests, decimal? maxPrice )
+    public async Task<IEnumerable<SearchResultItem>> SearchAvailableAsync( SearchFilter filter )
     {
-        if ( arrivalDate >= departureDate )
+        if ( filter.ArrivalDate >= filter.DepartureDate )
         {
-            throw new ArgumentException( "Arrival date must be before departure date." );
+            throw new InvalidDateRangeException( filter.ArrivalDate, filter.DepartureDate );
         }
 
-        var allProperties = await _propertyRepository.GetAllAsync();
-        if ( !string.IsNullOrEmpty( city ) )
-        {
-            allProperties = allProperties.Where( p => p.City.Equals( city, StringComparison.OrdinalIgnoreCase ) );
-        }
-
+        var properties = await _propertyRepository.GetByCityAsync( filter.City );
         var results = new List<SearchResultItem>();
-        foreach ( var property in allProperties )
+
+        foreach ( var property in properties )
         {
             var roomTypes = await _roomTypeRepository.GetByPropertyIdAsync( property.Id );
             foreach ( var rt in roomTypes )
             {
                 // Фильтрация по кол-ву гостей
-                if ( guests < rt.MinPersonCount || guests > rt.MaxPersonCount )
+                if ( filter.Guests < rt.MinPersonCount || filter.Guests > rt.MaxPersonCount )
                 {
                     continue;
                 }
 
                 // Фильтрация по цене
-                if ( maxPrice.HasValue && rt.DailyPrice > maxPrice.Value )
+                if ( filter.MaxPrice.HasValue && rt.DailyPrice > filter.MaxPrice.Value )
                 {
                     continue;
                 }
 
                 // Доступность
-                var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( rt.Id, arrivalDate, departureDate );
+                var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( rt.Id, filter.ArrivalDate, filter.DepartureDate );
+
                 if ( overlapping >= rt.AvailableRoomsCount )
                 {
                     continue;
                 }
 
                 // Подсчёт цены
-                int nights = departureDate.DayNumber - arrivalDate.DayNumber;
+                int nights = filter.DepartureDate.DayNumber - filter.ArrivalDate.DayNumber;
                 decimal total = rt.DailyPrice * nights;
 
                 results.Add( new SearchResultItem
