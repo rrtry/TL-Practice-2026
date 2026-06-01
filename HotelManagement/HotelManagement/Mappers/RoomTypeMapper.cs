@@ -10,11 +10,11 @@ public static class RoomTypeMapper
         return new RoomType
         {
             Name = request.Name,
-            DailyPrice = request.DailyPrice,
+            DailyPrice = request.DailyPrice!.Value,
             Currency = request.Currency,
-            MinPersonCount = request.MinPersonCount,
-            MaxPersonCount = request.MaxPersonCount,
-            AvailableRoomsCount = request.AvailableRoomsCount,
+            MinPersonCount = request.MinPersonCount!.Value,
+            MaxPersonCount = request.MaxPersonCount!.Value,
+            AvailableRoomsCount = request.AvailableRoomsCount!.Value,
             Services = request.Services,
             Amenities = request.Amenities
         };
@@ -40,11 +40,11 @@ public static class RoomTypeMapper
     public static void Update( RoomType existing, UpdateRoomTypeRequest request )
     {
         existing.Name = request.Name;
-        existing.DailyPrice = request.DailyPrice;
+        existing.DailyPrice = request.DailyPrice!.Value;
         existing.Currency = request.Currency;
-        existing.MinPersonCount = request.MinPersonCount;
-        existing.MaxPersonCount = request.MaxPersonCount;
-        existing.AvailableRoomsCount = request.AvailableRoomsCount;
+        existing.MinPersonCount = request.MinPersonCount!.Value;
+        existing.MaxPersonCount = request.MaxPersonCount!.Value;
+        existing.AvailableRoomsCount = request.AvailableRoomsCount!.Value;
         existing.Services = request.Services;
         existing.Amenities = request.Amenities;
     }

@@ -1,14 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Domain.Entities;
 using HotelManagement.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Tests.Controllers;
 
-public class RoomTypesControllerTests : IntegrationTestBase
+public class RoomTypesControllerTest : IntegrationTestBase
 {
-    public RoomTypesControllerTests( CustomWebApplicationFactory factory ) : base( factory ) { }
+    public RoomTypesControllerTest( CustomWebApplicationFactory factory ) : base( factory ) { }
 
     [Fact]
     public async Task CreateRoomType_ValidRequest_ReturnsCreated()

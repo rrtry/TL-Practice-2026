@@ -1,12 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using HotelManagement.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Tests.Controllers;
 
-public class PropertiesControllerTests : IntegrationTestBase
+public class PropertiesControllerTest : IntegrationTestBase
 {
-    public PropertiesControllerTests( CustomWebApplicationFactory factory ) : base( factory ) { }
+    public PropertiesControllerTest( CustomWebApplicationFactory factory ) : base( factory ) { }
 
     [Fact]
     public async Task Create_ValidProperty_ReturnsCreated()
@@ -85,6 +86,27 @@ public class PropertiesControllerTests : IntegrationTestBase
         // Verify
         var getResponse = await _client.GetAsync( $"/api/properties/{created.Id}" );
         Assert.Equal( HttpStatusCode.NotFound, getResponse.StatusCode );
+    }
+
+    [Fact]
+    public async Task Create_PropertyWithInvalidCoords_ReturnsBadRequest()
+    {
+        var propertyRequest = new CreatePropertyRequest
+        {
+            Name = "Hotel With Rooms",
+            City = "Saint-Petersburg",
+            Country = "RUS",
+            Address = "Tverskaya 1",
+            Latitude = -200.0,
+            Longitude = -200.0
+        };
+
+        var response = await _client.PostAsJsonAsync( "/api/properties", propertyRequest );
+        var problems = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        Assert.Equal( HttpStatusCode.BadRequest, response.StatusCode );
+        Assert.Contains( "Latitude", problems.Errors );
+        Assert.Contains( "Longitude", problems.Errors );
     }
 
     [Fact]

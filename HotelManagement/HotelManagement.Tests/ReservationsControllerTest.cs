@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Tests.Controllers;
 
-public class ReservationsControllerTests : IntegrationTestBase
+public class ReservationsControllerTest : IntegrationTestBase
 {
-    public ReservationsControllerTests( CustomWebApplicationFactory factory ) : base( factory ) { }
+    public ReservationsControllerTest( CustomWebApplicationFactory factory ) : base( factory ) { }
 
     [Fact]
     public async Task CreateReservation_ValidRequest_ReturnsCreatedWithTotal()

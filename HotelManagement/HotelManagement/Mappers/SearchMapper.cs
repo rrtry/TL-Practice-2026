@@ -11,9 +11,9 @@ public static class SearchMapper
         return new SearchFilter
         {
             City = request.City,
-            ArrivalDate = request.ArrivalDate,
-            DepartureDate = request.DepartureDate,
-            Guests = request.Guests,
+            ArrivalDate = request.ArrivalDate!.Value,
+            DepartureDate = request.DepartureDate!.Value,
+            Guests = request.Guests!.Value,
             MaxPrice = request.MaxPrice
         };
     }

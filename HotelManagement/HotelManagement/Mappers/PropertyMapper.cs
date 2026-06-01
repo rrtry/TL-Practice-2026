@@ -13,8 +13,8 @@ public static class PropertyMapper
             Country = request.Country,
             City = request.City,
             Address = request.Address,
-            Latitude = request.Latitude,
-            Longitude = request.Longitude
+            Latitude = request.Latitude!.Value,
+            Longitude = request.Longitude!.Value
         };
     }
 
@@ -38,7 +38,7 @@ public static class PropertyMapper
         existing.Country = request.Country;
         existing.City = request.City;
         existing.Address = request.Address;
-        existing.Latitude = request.Latitude;
-        existing.Longitude = request.Longitude;
+        existing.Latitude = request.Latitude!.Value;
+        existing.Longitude = request.Longitude!.Value;
     }
 }

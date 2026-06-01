@@ -9,15 +9,15 @@ public static class ReservationMapper
     {
         return new Reservation
         {
-            PropertyId = request.PropertyId,
-            RoomTypeId = request.RoomTypeId,
-            ArrivalDate = request.ArrivalDate,
-            DepartureDate = request.DepartureDate,
-            ArrivalTime = request.ArrivalTime,
-            DepartureTime = request.DepartureTime,
-            GuestName = request.GuestName,
+            PropertyId = request.PropertyId!.Value,
+            RoomTypeId = request.RoomTypeId!.Value,
+            ArrivalDate = request.ArrivalDate!.Value,
+            DepartureDate = request.DepartureDate!.Value,
+            ArrivalTime = request.ArrivalTime!.Value,
+            DepartureTime = request.DepartureTime!.Value,
             GuestPhoneNumber = request.GuestPhoneNumber,
-            GuestCount = request.GuestCount
+            GuestName = request.GuestName,
+            GuestCount = request.GuestCount!.Value
         };
     }
 
