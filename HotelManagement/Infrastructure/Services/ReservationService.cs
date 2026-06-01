@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Filters;
+using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 
@@ -11,12 +12,18 @@ public class ReservationService : IReservationService
     private readonly IReservationRepository _reservationRepository;
     private readonly IRoomTypeRepository _roomTypeRepository;
     private readonly IPropertyRepository _propertyRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ReservationService( IReservationRepository reservationRepository, IRoomTypeRepository roomTypeRepository, IPropertyRepository propertyRepository )
+    public ReservationService(
+        IReservationRepository reservationRepository,
+        IRoomTypeRepository roomTypeRepository,
+        IPropertyRepository propertyRepository,
+        IUnitOfWork unitOfWork )
     {
         _reservationRepository = reservationRepository;
         _roomTypeRepository = roomTypeRepository;
         _propertyRepository = propertyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Reservation> CreateReservationAsync( Reservation reservation )
@@ -44,6 +51,7 @@ public class ReservationService : IReservationService
         reservation.Currency = roomType.Currency;
 
         await _reservationRepository.AddAsync( reservation );
+        await _unitOfWork.SaveChangesAsync();
 
         return reservation;
     }
@@ -63,6 +71,7 @@ public class ReservationService : IReservationService
         }
 
         await _reservationRepository.DeleteAsync( id );
+        await _unitOfWork.SaveChangesAsync();
     }
 
     private void ValidateDates( Reservation reservation )

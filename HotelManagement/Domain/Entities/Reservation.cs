@@ -12,6 +12,6 @@ public class Reservation
     public string GuestName { get; set; } = string.Empty;
     public string GuestPhoneNumber { get; set; } = string.Empty;
     public decimal Total { get; set; }
-    public string Currency { get; set; } = "RUB";
+    public string Currency { get; set; } = string.Empty;
     public int GuestCount { get; set; }
 }

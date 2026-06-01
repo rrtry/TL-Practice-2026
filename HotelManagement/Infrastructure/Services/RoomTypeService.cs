@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 
@@ -10,12 +11,18 @@ public class RoomTypeService : IRoomTypeService
     private readonly IRoomTypeRepository _roomTypeRepository;
     private readonly IReservationRepository _reservationRepository;
     private readonly IPropertyRepository _propertyRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RoomTypeService( IRoomTypeRepository roomTypeRepository, IReservationRepository reservationRepository, IPropertyRepository propertyRepository )
+    public RoomTypeService(
+        IRoomTypeRepository roomTypeRepository,
+        IReservationRepository reservationRepository,
+        IPropertyRepository propertyRepository,
+        IUnitOfWork unitOfWork )
     {
         _roomTypeRepository = roomTypeRepository;
         _reservationRepository = reservationRepository;
         _propertyRepository = propertyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<RoomType>> GetRoomTypesByPropertyIdAsync( Guid propertyId )
@@ -40,8 +47,9 @@ public class RoomTypeService : IRoomTypeService
         }
 
         roomType.PropertyId = propertyId;
-        roomType.Id = Guid.NewGuid();
+
         await _roomTypeRepository.AddAsync( roomType );
+        await _unitOfWork.SaveChangesAsync();
 
         return roomType;
     }
@@ -56,7 +64,9 @@ public class RoomTypeService : IRoomTypeService
         }
 
         roomType.PropertyId = existing.PropertyId;
+
         await _roomTypeRepository.UpdateAsync( roomType );
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteRoomTypeAsync( Guid id )
@@ -75,5 +85,6 @@ public class RoomTypeService : IRoomTypeService
         }
 
         await _roomTypeRepository.DeleteAsync( id );
+        await _unitOfWork.SaveChangesAsync();
     }
 }

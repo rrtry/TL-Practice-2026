@@ -1,8 +1,10 @@
-﻿using Domain.Interfaces.Repositories;
+﻿using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
+using HotelManagement.Tests.Fakes;
 using Infrastructure.Repositories;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelManagement.Tests;
@@ -11,21 +13,39 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost( IWebHostBuilder builder )
     {
+        builder.UseEnvironment( "Test" ); // Явно устанавливаем среду, т.к отсутствует AppDbContext
+
         builder.ConfigureServices( services =>
         {
-            RemoveServiceIfExists( services, typeof( IPropertyRepository ) );
-            RemoveServiceIfExists( services, typeof( IRoomTypeRepository ) );
-            RemoveServiceIfExists( services, typeof( IReservationRepository ) );
+            RemoveServiceByType( services, typeof( IPropertyRepository ) );
+            RemoveServiceByType( services, typeof( IRoomTypeRepository ) );
+            RemoveServiceByType( services, typeof( IReservationRepository ) );
+
+            var dbContextDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof( DbContextOptions<Infrastructure.Database.AppDbContext> ) );
+
+            if ( dbContextDescriptor != null )
+            {
+                services.Remove( dbContextDescriptor );
+            }
+
+            RemoveServiceByType( services, typeof( Infrastructure.Database.AppDbContext ) );
+            RemoveServiceByType( services, typeof( IUnitOfWork ) );
 
             services.AddSingleton<IPropertyRepository, InMemoryPropertyRepository>();
             services.AddSingleton<IRoomTypeRepository, InMemoryRoomTypeRepository>();
             services.AddSingleton<IReservationRepository, InMemoryReservationRepository>();
+            services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
+
         } );
     }
 
-    private void RemoveServiceIfExists( IServiceCollection services, Type serviceType )
+    private void RemoveServiceByType( IServiceCollection services, Type serviceType )
     {
-        var service = services.SingleOrDefault( d => d.ServiceType == serviceType );
-        if ( service != null ) services.Remove( service );
+        var descriptor = services.SingleOrDefault( d => d.ServiceType == serviceType );
+        if ( descriptor != null )
+        {
+            services.Remove( descriptor );
+        }
     }
 }

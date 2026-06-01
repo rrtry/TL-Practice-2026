@@ -6,7 +6,7 @@ public class RoomType
     public Guid PropertyId { get; set; }
     public string Name { get; set; } = string.Empty;
     public decimal DailyPrice { get; set; }
-    public string Currency { get; set; } = "RUB";
+    public string Currency { get; set; } = string.Empty;
     public int MinPersonCount { get; set; }
     public int MaxPersonCount { get; set; }
     public int AvailableRoomsCount { get; set; }
