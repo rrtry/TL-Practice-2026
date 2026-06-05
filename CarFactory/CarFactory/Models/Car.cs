@@ -9,13 +9,13 @@ namespace CarFactory.Models;
 
 public class Car
 {
-    private IBrand _brand;
-    private IColor _color;
-    private IBody _body;
-    private IEngine _engine;
-    private ITransmission _transmission;
-    private IWheels _wheels;
-    private int _maxSpeed;
+    private readonly IBrand _brand;
+    private readonly IColor _color;
+    private readonly IBody _body;
+    private readonly IEngine _engine;
+    private readonly ITransmission _transmission;
+    private readonly IWheels _wheels;
+    private readonly int _maxSpeed;
 
     public Car(
         IBrand brand,

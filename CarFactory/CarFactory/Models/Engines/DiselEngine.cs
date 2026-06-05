@@ -1,6 +1,6 @@
 ﻿namespace CarFactory.Models.Engines;
 
-public class DieselEngine : IEngine
+public class DiselEngine : IEngine
 {
     public string Name => "Diesel 2.0";
     public int Horsepower => 150;

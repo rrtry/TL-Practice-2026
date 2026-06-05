@@ -9,42 +9,62 @@ namespace CarFactory.Factory;
 
 public static class CarCatalog
 {
+    private static readonly ToyotaBrand _toyotaBrand = new();
+    private static readonly BMWBrand _bmwBrand = new();
+    private static readonly SubaruBrand _subaruBrand = new();
+
+    private static readonly RedColor _redColor = new();
+    private static readonly BlueColor _blueColor = new();
+
+    private static readonly SedanBody _sedanBody = new();
+    private static readonly HatchbackBody _hatchbackBody = new();
+    private static readonly SUVBody _suvBody = new();
+
+    private static readonly PetrolEngine _petrolEngine = new();
+    private static readonly DiselEngine _diselEngine = new();
+
+    private static readonly LightWheels _lightWheels = new();
+    private static readonly HeavyWheels _heavyWheels = new();
+
+    private static readonly AutomaticTransmission _automaticTransmission = new();
+    private static readonly ManualTransmission _manualTransmission = new();
+
     public static readonly IReadOnlyList<IBrand> Brands = new List<IBrand>
     {
-        new ToyotaBrand(),
-        new BMWBrand(),
-        new SubaruBrand()
+        _toyotaBrand,
+        _bmwBrand,
+        _subaruBrand
     };
 
     public static readonly IReadOnlyList<IColor> Colors = new List<IColor>
     {
-        new RedColor(),
-        new BlueColor()
+        _redColor,
+        _blueColor
     };
 
     public static readonly IReadOnlyList<IBody> Bodies = new List<IBody>
     {
-        new SedanBody(),
-        new HatchbackBody(),
-        new SUVBody()
+        _sedanBody,
+        _hatchbackBody,
+        _suvBody
     };
 
     public static readonly IReadOnlyList<IEngine> Engines = new List<IEngine>
     {
-        new PetrolEngine(),
-        new DieselEngine()
+        _petrolEngine,
+        _diselEngine
     };
 
     public static readonly IReadOnlyList<IWheels> Wheels = new List<IWheels>
     {
-        new LightWheels(),
-        new HeavyWheels()
+        _lightWheels,
+        _heavyWheels
     };
 
     public static readonly IReadOnlyList<ITransmission> Transmissions = new List<ITransmission>
     {
-        new AutomaticTransmission(),
-        new ManualTransmission()
+        _automaticTransmission,
+        _manualTransmission
     };
 
     public static readonly IReadOnlyList<CarPreset> Presets = new List<CarPreset>
@@ -61,12 +81,12 @@ public static class CarCatalog
             () =>
             {
                 return new CarBuilder()
-                .SetBrand( new ToyotaBrand() )
-                .SetColor( new BlueColor() )
-                .SetBody( new SedanBody() )
-                .SetEngine( new PetrolEngine() )
-                .SetTransmission( new AutomaticTransmission() )
-                .SetWheels( new LightWheels() );
+                .SetBrand( _toyotaBrand )
+                .SetColor( _blueColor )
+                .SetBody( _sedanBody )
+                .SetEngine( _petrolEngine )
+                .SetTransmission( _automaticTransmission )
+                .SetWheels( _lightWheels );
             }
         );
 
@@ -76,12 +96,12 @@ public static class CarCatalog
             () =>
             {
                 return new CarBuilder()
-                .SetBrand( new BMWBrand() )
-                .SetColor( new RedColor() )
-                .SetBody( new HatchbackBody() )
-                .SetEngine( new PetrolEngine() )
-                .SetTransmission( new ManualTransmission() )
-                .SetWheels( new LightWheels() );
+                .SetBrand( _bmwBrand )
+                .SetColor( _redColor )
+                .SetBody( _hatchbackBody )
+                .SetEngine( _petrolEngine )
+                .SetTransmission( _manualTransmission )
+                .SetWheels( _lightWheels );
             }
         );
 
@@ -91,12 +111,12 @@ public static class CarCatalog
             () =>
             {
                 return new CarBuilder()
-                .SetBrand( new ToyotaBrand() )
-                .SetColor( new BlueColor() )
-                .SetBody( new SUVBody() )
-                .SetEngine( new DieselEngine() )
-                .SetTransmission( new AutomaticTransmission() )
-                .SetWheels( new HeavyWheels() );
+                .SetBrand( _toyotaBrand )
+                .SetColor( _blueColor )
+                .SetBody( _suvBody )
+                .SetEngine( _diselEngine )
+                .SetTransmission( _automaticTransmission )
+                .SetWheels( _heavyWheels );
             }
         );
 
@@ -106,12 +126,12 @@ public static class CarCatalog
             () =>
             {
                 return new CarBuilder()
-                .SetBrand( new SubaruBrand() )
-                .SetColor( new BlueColor() )
-                .SetBody( new HatchbackBody() )
-                .SetEngine( new PetrolEngine() )
-                .SetTransmission( new ManualTransmission() )
-                .SetWheels( new LightWheels() );
+                .SetBrand( _subaruBrand )
+                .SetColor( _blueColor )
+                .SetBody( _hatchbackBody )
+                .SetEngine( _petrolEngine )
+                .SetTransmission( _manualTransmission )
+                .SetWheels( _lightWheels );
             }
         );
 }
