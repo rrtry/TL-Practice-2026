@@ -3,6 +3,7 @@ using Fighters.Models.Classes;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Weapons;
+using Fighters.Services.Environment;
 using Fighters.Utils;
 
 namespace Fighters;
@@ -35,9 +36,9 @@ public class FighterCreator
         new NoArmor()
     };
 
-    private readonly IEnvironment _env;
+    private readonly IEnvironmentService _env;
 
-    public FighterCreator( IEnvironment env )
+    public FighterCreator( IEnvironmentService env )
     {
         _env = env;
     }

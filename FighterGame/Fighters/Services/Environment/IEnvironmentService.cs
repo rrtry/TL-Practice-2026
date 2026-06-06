@@ -1,6 +1,6 @@
-﻿namespace Fighters;
+﻿namespace Fighters.Services.Environment;
 
-public interface IEnvironment
+public interface IEnvironmentService
 {
     void WriteLine( string message );
     void Write( string message );

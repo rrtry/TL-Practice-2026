@@ -1,6 +1,6 @@
-﻿namespace Fighters;
+﻿namespace Fighters.Services.Environment;
 
-public class ConsoleEnvironment : IEnvironment
+public class ConsoleEnvironmentService : IEnvironmentService
 {
     public void Write( string message )
     {

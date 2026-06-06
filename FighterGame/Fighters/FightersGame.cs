@@ -1,4 +1,8 @@
-﻿namespace Fighters;
+﻿using Fighters.Services.Arena;
+using Fighters.Services.Environment;
+using Fighters.Services.Randomization;
+
+namespace Fighters;
 
 public class FightersGame
 {
@@ -23,14 +27,14 @@ public class FightersGame
         { CMD_EXIT, "Выйти" }
     };
 
-    private readonly IEnvironment _env;
-    private Arena _arena;
+    private readonly IEnvironmentService _env;
+    private ArenaService _arena;
     private FighterCreator _creator;
 
-    public FightersGame( IEnvironment env )
+    public FightersGame( IEnvironmentService env, IRandomService rand )
     {
         _env = env;
-        _arena = new Arena( _env );
+        _arena = new ArenaService( _env, rand );
         _creator = new FighterCreator( _env );
     }
 

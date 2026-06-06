@@ -1,21 +1,24 @@
 ﻿using Fighters.Models.Fighters;
+using Fighters.Services.Environment;
+using Fighters.Services.Randomization;
 using Fighters.Utils;
 
-namespace Fighters;
+namespace Fighters.Services.Arena;
 
-public class Arena
+public class ArenaService
 {
     private const int MAX_ROUNDS = 100;
 
-    private readonly IEnvironment _env;
-    private readonly Random _random = new Random();
+    private readonly IEnvironmentService _env;
+    private readonly IRandomService _rand;
 
     private readonly List<IFighter> _fighters = new();
     private List<IFighter> _alive = new();
 
-    public Arena( IEnvironment env )
+    public ArenaService( IEnvironmentService env, IRandomService rand )
     {
         _env = env;
+        _rand = rand;
     }
 
     public void SimulateBattle()
@@ -76,7 +79,7 @@ public class Arena
             return false;
         }
 
-        opponent = opponents[ _random.Next( opponents.Count ) ];
+        opponent = opponents[ _rand.Next( opponents.Count ) ];
 
         return true;
     }
@@ -88,7 +91,7 @@ public class Arena
         IFighter target
     )
     {
-        DamageStats damageStats = target.TakeDamage( _random, attacker );
+        DamageStats damageStats = target.TakeDamage( _rand, attacker );
 
         damageDealt[ attacker ] = damageDealt.GetValueOrDefault( attacker ) + damageStats.Damage;
         damageReceived[ target ] = damageReceived.GetValueOrDefault( target ) + damageStats.Damage;

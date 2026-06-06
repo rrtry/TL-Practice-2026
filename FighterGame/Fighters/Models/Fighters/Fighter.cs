@@ -2,6 +2,7 @@
 using Fighters.Models.Classes;
 using Fighters.Models.Races;
 using Fighters.Models.Weapons;
+using Fighters.Services.Randomization;
 
 namespace Fighters.Models.Fighters;
 
@@ -33,7 +34,7 @@ public class Fighter : IFighter
     public int CalculateArmor() => _race.Armor + _class.Armor + _armor.Armor;
     public int GetInitiative() => _race.Initiative + _class.Initiative;
 
-    public DamageStats TakeDamage( Random random, IFighter attacker )
+    public DamageStats TakeDamage( IRandomService random, IFighter attacker )
     {
         int attackerDamage = attacker.CalculateDamage();
         int baseDamage = Math.Max( 0, attackerDamage - CalculateArmor() );

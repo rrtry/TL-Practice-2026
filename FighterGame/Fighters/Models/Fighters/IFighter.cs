@@ -1,4 +1,6 @@
-﻿namespace Fighters.Models.Fighters;
+﻿using Fighters.Services.Randomization;
+
+namespace Fighters.Models.Fighters;
 
 public interface IFighter : INamed
 {
@@ -7,5 +9,5 @@ public interface IFighter : INamed
     int CalculateDamage();
     int CalculateArmor();
     int GetInitiative();
-    DamageStats TakeDamage( Random random, IFighter attacker );
+    DamageStats TakeDamage( IRandomService random, IFighter attacker );
 }

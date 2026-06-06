@@ -1,8 +1,10 @@
-﻿namespace Fighters.Utils;
+﻿using Fighters.Services.Environment;
+
+namespace Fighters.Utils;
 
 public static class EnvironmentUtils
 {
-    public static int ReadIntInRange( IEnvironment env, int min, int max )
+    public static int ReadIntInRange( IEnvironmentService env, int min, int max )
     {
         while ( true )
         {
@@ -15,7 +17,7 @@ public static class EnvironmentUtils
         }
     }
 
-    public static string ReadString( IEnvironment env )
+    public static string ReadString( IEnvironmentService env )
     {
         while ( true )
         {
