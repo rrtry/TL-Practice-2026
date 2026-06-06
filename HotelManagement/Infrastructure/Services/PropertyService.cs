@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+﻿using Domain;
+using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Filters;
-using Domain.Interfaces;
-using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
+using Domain.Repositories;
+using Domain.Services;
 
 namespace Infrastructure.Services;
 

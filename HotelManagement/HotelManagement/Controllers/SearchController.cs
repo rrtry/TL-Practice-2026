@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.Services;
 using HotelManagement.Dto;
 using HotelManagement.Mappers;
 using Microsoft.AspNetCore.Mvc;

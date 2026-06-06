@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces;
+﻿using Domain;
 
 namespace HotelManagement.Tests.Fakes;
 

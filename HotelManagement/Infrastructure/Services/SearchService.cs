@@ -1,8 +1,8 @@
 ﻿using Domain.Exceptions;
 using Domain.Filters;
-using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
 using Domain.Models;
+using Domain.Repositories;
+using Domain.Services;
 
 namespace Infrastructure.Services;
 

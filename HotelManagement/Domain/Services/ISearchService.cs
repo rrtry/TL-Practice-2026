@@ -1,4 +1,4 @@
-﻿namespace Domain.Interfaces.Services;
+﻿namespace Domain.Services;
 
 using Domain.Filters;
 using Domain.Models;

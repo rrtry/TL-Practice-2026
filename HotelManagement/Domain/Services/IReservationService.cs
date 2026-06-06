@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Filters;
 
-namespace Domain.Interfaces.Services;
+namespace Domain.Services;
 
 public interface IReservationService
 {

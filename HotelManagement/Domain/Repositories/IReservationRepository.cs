@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Filters;
 
-namespace Domain.Interfaces.Repositories;
+namespace Domain.Repositories;
 
 public interface IReservationRepository
 {

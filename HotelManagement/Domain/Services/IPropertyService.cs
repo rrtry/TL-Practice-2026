@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Domain.Interfaces.Services;
+namespace Domain.Services;
 
 public interface IPropertyService
 {

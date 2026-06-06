@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Domain.Repositories;
 
 namespace Infrastructure.Repositories;
 

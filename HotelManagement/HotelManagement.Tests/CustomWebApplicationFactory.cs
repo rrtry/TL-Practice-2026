@@ -1,5 +1,5 @@
-﻿using Domain.Interfaces;
-using Domain.Interfaces.Repositories;
+﻿using Domain;
+using Domain.Repositories;
 using HotelManagement.Tests.Fakes;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Hosting;
