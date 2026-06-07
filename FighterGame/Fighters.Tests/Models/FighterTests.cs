@@ -6,7 +6,7 @@ using Fighters.Models.Weapons;
 using Fighters.Services.Randomization;
 using Moq;
 
-namespace Fighters.Tests.Models.Fighters;
+namespace Fighters.Tests.Models;
 
 public class FighterTests
 {
@@ -17,6 +17,7 @@ public class FighterTests
         // Arrange
         var race = new Mock<IRace>();
         race.Setup( r => r.Health ).Returns( 100 );
+
         var fighterClass = new Mock<IClass>();
         fighterClass.Setup( c => c.Health ).Returns( 50 );
 
@@ -36,8 +37,10 @@ public class FighterTests
         // Arrange
         var race = new Mock<IRace>();
         race.Setup( r => r.Damage ).Returns( 5 );
+
         var fighterClass = new Mock<IClass>();
         fighterClass.Setup( c => c.Damage ).Returns( 10 );
+
         var weapon = new Mock<IWeapon>();
         weapon.Setup( w => w.Damage ).Returns( 15 );
 
@@ -57,8 +60,10 @@ public class FighterTests
         // Arrange
         var race = new Mock<IRace>();
         race.Setup( r => r.Armor ).Returns( 2 );
+
         var fighterClass = new Mock<IClass>();
         fighterClass.Setup( c => c.Armor ).Returns( 5 );
+
         var armor = new Mock<IArmor>();
         armor.Setup( a => a.Armor ).Returns( 10 );
 
@@ -78,6 +83,7 @@ public class FighterTests
         // Arrange
         var race = new Mock<IRace>();
         race.Setup( r => r.Initiative ).Returns( 8 );
+
         var fighterClass = new Mock<IClass>();
         fighterClass.Setup( c => c.Initiative ).Returns( 7 );
 
@@ -218,10 +224,10 @@ public class FighterTests
         race.Setup( r => r.Damage ).Returns( 0 );
 
         var fighterClass = new Mock<IClass>();
-        fighterClass.Setup( c => c.Damage ).Returns( damage );
+        fighterClass.Setup( c => c.Damage ).Returns( 0 );
 
         var weapon = new Mock<IWeapon>();
-        weapon.Setup( w => w.Damage ).Returns( 0 );
+        weapon.Setup( w => w.Damage ).Returns( damage );
 
         return new Fighter( "Attacker", race.Object, fighterClass.Object,
             weapon.Object, Mock.Of<IArmor>() );

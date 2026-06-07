@@ -1,4 +1,5 @@
-﻿using Fighters.Services.Arena;
+﻿using Fighters.Factories;
+using Fighters.Services.Arena;
 using Fighters.Services.Environment;
 using Fighters.Services.Randomization;
 
