@@ -6,7 +6,7 @@ using Fighters.Models.Weapons;
 using Fighters.Services.Environment;
 using Fighters.Utils;
 
-namespace Fighters;
+namespace Fighters.Factories;
 
 public class FighterCreator
 {

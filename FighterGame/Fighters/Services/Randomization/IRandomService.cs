@@ -2,7 +2,6 @@
 
 public interface IRandomService
 {
-    int Next( int minValue, int maxValue );
     int Next( int maxValue );
     double NextDouble();
 }

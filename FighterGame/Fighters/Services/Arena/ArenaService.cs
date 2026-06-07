@@ -1,4 +1,5 @@
-﻿using Fighters.Models.Fighters;
+﻿using System.Reflection.Metadata.Ecma335;
+using Fighters.Models.Fighters;
 using Fighters.Services.Environment;
 using Fighters.Services.Randomization;
 using Fighters.Utils;
@@ -15,11 +16,15 @@ public class ArenaService
     private readonly List<IFighter> _fighters = new();
     private List<IFighter> _alive = new();
 
+    public IReadOnlyList<IFighter> Fighters => _fighters;
+
     public ArenaService( IEnvironmentService env, IRandomService rand )
     {
         _env = env;
         _rand = rand;
     }
+
+    public List<IFighter> GetFighters() => _fighters;
 
     public void SimulateBattle()
     {
