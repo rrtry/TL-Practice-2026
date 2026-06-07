@@ -1,4 +1,4 @@
-# Список тестов с названиями методов
+# TESTLIST
 
 ## FighterCreatorTests
 

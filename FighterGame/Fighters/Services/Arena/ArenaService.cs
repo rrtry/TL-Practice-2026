@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Fighters.Models.Fighters;
+﻿using Fighters.Models.Fighters;
 using Fighters.Services.Environment;
 using Fighters.Services.Randomization;
 using Fighters.Utils;
