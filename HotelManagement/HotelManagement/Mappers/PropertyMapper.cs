@@ -34,11 +34,34 @@ public static class PropertyMapper
 
     public static void Update( Property existing, UpdatePropertyRequest request )
     {
-        existing.Name = request.Name;
-        existing.Country = request.Country;
-        existing.City = request.City;
-        existing.Address = request.Address;
-        existing.Latitude = request.Latitude!.Value;
-        existing.Longitude = request.Longitude!.Value;
+        if ( request.Name != null )
+        {
+            existing.Name = request.Name;
+        }
+
+        if ( request.Country != null )
+        {
+            existing.Country = request.Country;
+        }
+
+        if ( request.City != null )
+        {
+            existing.City = request.City;
+        }
+
+        if ( request.Address != null )
+        {
+            existing.Address = request.Address;
+        }
+
+        if ( request.Latitude != null )
+        {
+            existing.Latitude = request.Latitude!.Value;
+        }
+
+        if ( request.Longitude != null )
+        {
+            existing.Longitude = request.Longitude!.Value;
+        }
     }
 }

@@ -4,19 +4,17 @@ using HotelManagement.Dto;
 using HotelManagement.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelBookingApi.WebApi.Controllers;
+namespace HotelManagement.WebApi.Controllers;
 
 [ApiController]
 [Route( "api/reservations" )]
 public class ReservationsController : ControllerBase
 {
     private readonly IReservationService _reservationService;
-    private readonly IRoomTypeService _roomTypeService;
 
-    public ReservationsController( IReservationService reservationService, IRoomTypeService roomTypeService )
+    public ReservationsController( IReservationService reservationService )
     {
         _reservationService = reservationService;
-        _roomTypeService = roomTypeService;
     }
 
     [HttpPost]
@@ -46,18 +44,14 @@ public class ReservationsController : ControllerBase
     {
         var reservation = await _reservationService.GetReservationByIdAsync( id );
 
-        if ( reservation == null )
-        {
-            return NotFound();
-        }
-
         return Ok( ReservationMapper.MapEntityToResponse( reservation ) );
     }
 
     [HttpDelete( "{id}" )]
-    public async Task<IActionResult> Cancel( Guid id )
+    public async Task<IActionResult> Delete( Guid id )
     {
-        await _reservationService.CancelReservationAsync( id );
+        await _reservationService.DeleteReservationAsync( id );
+
         return NoContent();
     }
 }

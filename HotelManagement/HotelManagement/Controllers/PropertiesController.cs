@@ -29,12 +29,6 @@ public class PropertiesController : ControllerBase
     public async Task<IActionResult> GetById( Guid id )
     {
         var property = await _propertyService.GetPropertyByIdAsync( id );
-
-        if ( property == null )
-        {
-            return NotFound();
-        }
-
         return Ok( PropertyMapper.MapEntityToResponse( property ) );
     }
 
@@ -51,11 +45,6 @@ public class PropertiesController : ControllerBase
     public async Task<IActionResult> Update( Guid id, [FromBody] UpdatePropertyRequest request )
     {
         var existing = await _propertyService.GetPropertyByIdAsync( id );
-
-        if ( existing == null )
-        {
-            return NotFound();
-        }
 
         PropertyMapper.Update( existing, request );
         await _propertyService.UpdatePropertyAsync( existing );

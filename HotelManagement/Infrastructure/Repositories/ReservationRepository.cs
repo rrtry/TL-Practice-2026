@@ -6,20 +6,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class EfReservationRepository : IReservationRepository
+public class ReservationRepository : IReservationRepository
 {
     private readonly AppDbContext _context;
 
-    public EfReservationRepository( AppDbContext context )
+    public ReservationRepository( AppDbContext context )
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<Reservation>> GetAllAsync() =>
-        await _context.Reservations.AsNoTracking().ToListAsync();
+    public async Task<IEnumerable<Reservation>> GetAllAsync()
+    {
+        return await _context.Reservations
+            .AsNoTracking()
+            .ToListAsync();
+    }
 
-    public async Task<Reservation?> GetByIdAsync( Guid id ) =>
-        await _context.Reservations.FindAsync( id );
+    public async Task<Reservation?> GetByIdAsync( Guid id )
+    {
+        return await _context.Reservations
+            .AsNoTracking()
+            .FirstOrDefaultAsync( r => r.Id == id );
+    }
+
+    public async Task<Reservation?> GetByIdAsyncForUpdate( Guid id )
+    {
+        return await _context.Reservations.FindAsync( id );
+    }
 
     public async Task AddAsync( Reservation reservation )
     {
@@ -27,7 +40,12 @@ public class EfReservationRepository : IReservationRepository
         await _context.Reservations.AddAsync( reservation );
     }
 
-    public async Task DeleteAsync( Guid id )
+    public void Delete( Reservation reservation )
+    {
+        _context.Reservations.Remove( reservation );
+    }
+
+    public async Task DeleteAsyncById( Guid id )
     {
         var entity = await _context.Reservations.FindAsync( id );
         if ( entity != null )

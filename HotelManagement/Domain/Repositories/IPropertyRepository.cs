@@ -6,9 +6,11 @@ public interface IPropertyRepository
 {
     Task<IEnumerable<Property>> GetAllAsync();
     Task<IEnumerable<Property>> GetByCityAsync( string city );
+    Task<Property?> GetByIdAsyncForUpdate( Guid id );
     Task<Property?> GetByIdAsync( Guid id );
     Task AddAsync( Property property );
     Task UpdateAsync( Property property );
-    Task DeleteAsync( Guid id );
+    Task DeleteByIdAsync( Guid id );
+    void Delete( Property property );
     Task<bool> ExistsAsync( Guid id );
 }

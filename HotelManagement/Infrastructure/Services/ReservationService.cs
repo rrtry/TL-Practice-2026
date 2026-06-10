@@ -56,13 +56,12 @@ public class ReservationService : IReservationService
         return reservation;
     }
 
-    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( ReservationFilter filter ) =>
-        await _reservationRepository.GetFilteredAsync( filter );
+    public async Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( ReservationFilter filter )
+    {
+        return await _reservationRepository.GetFilteredAsync( filter );
+    }
 
-    public async Task<Reservation?> GetReservationByIdAsync( Guid id ) =>
-        await _reservationRepository.GetByIdAsync( id );
-
-    public async Task CancelReservationAsync( Guid id )
+    public async Task<Reservation> GetReservationByIdAsync( Guid id )
     {
         var reservation = await _reservationRepository.GetByIdAsync( id );
         if ( reservation == null )
@@ -70,7 +69,18 @@ public class ReservationService : IReservationService
             throw new ReservationNotFoundException( id );
         }
 
-        await _reservationRepository.DeleteAsync( id );
+        return reservation;
+    }
+
+    public async Task DeleteReservationAsync( Guid id )
+    {
+        var reservation = await _reservationRepository.GetByIdAsyncForUpdate( id );
+        if ( reservation == null )
+        {
+            throw new ReservationNotFoundException( id );
+        }
+
+        _reservationRepository.Delete( reservation );
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -79,6 +89,20 @@ public class ReservationService : IReservationService
         if ( reservation.ArrivalDate >= reservation.DepartureDate )
         {
             throw new InvalidDateRangeException( reservation.ArrivalDate, reservation.DepartureDate );
+        }
+
+        var now = DateTime.UtcNow;
+        var nowDate = DateOnly.FromDateTime( now );
+        var nowTime = TimeOnly.FromDateTime( now );
+
+        if ( reservation.ArrivalDate < nowDate )
+        {
+            throw new InvalidArrivalDateException( reservation.ArrivalDate, nowDate );
+        }
+
+        if ( reservation.ArrivalDate == nowDate && reservation.ArrivalTime >= nowTime )
+        {
+            throw new InvalidArrivalTimeException( reservation.ArrivalTime, nowTime );
         }
     }
 
@@ -116,7 +140,7 @@ public class ReservationService : IReservationService
 
     private async Task ValidateAvailabilityAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure, int availableRoomsCount )
     {
-        var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( roomTypeId, arrival, departure );
+        int overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( roomTypeId, arrival, departure );
         if ( overlapping >= availableRoomsCount )
         {
             throw new NoAvailableRoomsException( roomTypeId, arrival, departure );

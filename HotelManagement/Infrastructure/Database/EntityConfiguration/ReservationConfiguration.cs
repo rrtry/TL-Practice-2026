@@ -42,7 +42,8 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .HasMaxLength( 10 )
             .IsRequired();
 
-        builder.Property( r => r.GuestCount ).IsRequired();
+        builder.Property( r => r.GuestCount )
+            .IsRequired();
 
         builder.HasOne<Property>()
             .WithMany()

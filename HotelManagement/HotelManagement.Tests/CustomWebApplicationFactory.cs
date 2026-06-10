@@ -1,7 +1,7 @@
 ﻿using Domain;
 using Domain.Repositories;
 using HotelManagement.Tests.Fakes;
-using Infrastructure.Repositories;
+using HotelManagement.Tests.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

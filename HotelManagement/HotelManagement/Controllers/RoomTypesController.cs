@@ -30,11 +30,6 @@ public class RoomTypesController : ControllerBase
     {
         var roomType = await _roomTypeService.GetRoomTypeByIdAsync( id );
 
-        if ( roomType == null )
-        {
-            return NotFound();
-        }
-
         return Ok( RoomTypeMapper.MapEntityToResponse( roomType ) );
     }
 
@@ -52,11 +47,6 @@ public class RoomTypesController : ControllerBase
     {
         var existing = await _roomTypeService.GetRoomTypeByIdAsync( id );
 
-        if ( existing == null )
-        {
-            return NotFound();
-        }
-
         RoomTypeMapper.Update( existing, request );
         await _roomTypeService.UpdateRoomTypeAsync( existing );
 
@@ -67,6 +57,7 @@ public class RoomTypesController : ControllerBase
     public async Task<IActionResult> Delete( Guid id )
     {
         await _roomTypeService.DeleteRoomTypeAsync( id );
+
         return NoContent();
     }
 }

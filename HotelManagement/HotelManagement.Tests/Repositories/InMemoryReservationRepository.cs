@@ -3,17 +3,26 @@ using Domain.Entities;
 using Domain.Filters;
 using Domain.Repositories;
 
-namespace Infrastructure.Repositories;
+namespace HotelManagement.Tests.Repositories;
 
 public class InMemoryReservationRepository : IReservationRepository
 {
     private readonly ConcurrentDictionary<Guid, Reservation> _reservations = new();
 
-    public Task<IEnumerable<Reservation>> GetAllAsync() =>
-        Task.FromResult( _reservations.Values.AsEnumerable() );
+    public Task<IEnumerable<Reservation>> GetAllAsync()
+    {
+        return Task.FromResult( _reservations.Values.AsEnumerable() );
+    }
 
-    public Task<Reservation?> GetByIdAsync( Guid id ) =>
-        Task.FromResult( _reservations.TryGetValue( id, out var res ) ? res : null );
+    public Task<Reservation?> GetByIdAsync( Guid id )
+    {
+        return GetByIdAsyncForUpdate( id );
+    }
+
+    public Task<Reservation?> GetByIdAsyncForUpdate( Guid id )
+    {
+        return Task.FromResult( _reservations.TryGetValue( id, out var res ) ? res : null );
+    }
 
     public Task AddAsync( Reservation reservation )
     {
@@ -23,10 +32,15 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync( Guid id )
+    public Task DeleteAsyncById( Guid id )
     {
         _reservations.TryRemove( id, out _ );
         return Task.CompletedTask;
+    }
+
+    public void Delete( Reservation reservation )
+    {
+        _reservations.TryRemove( reservation.Id, out _ );
     }
 
     public Task<int> GetOverlappingReservationsCountAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure )

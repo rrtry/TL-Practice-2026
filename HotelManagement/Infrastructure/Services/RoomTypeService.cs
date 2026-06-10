@@ -36,8 +36,17 @@ public class RoomTypeService : IRoomTypeService
         return await _roomTypeRepository.GetByPropertyIdAsync( propertyId );
     }
 
-    public async Task<RoomType?> GetRoomTypeByIdAsync( Guid id ) =>
-        await _roomTypeRepository.GetByIdAsync( id );
+    public async Task<RoomType> GetRoomTypeByIdAsync( Guid id )
+    {
+        var roomType = await _roomTypeRepository.GetByIdAsync( id );
+
+        if ( roomType == null )
+        {
+            throw new RoomTypeNotFoundException( id );
+        }
+
+        return roomType;
+    }
 
     public async Task<RoomType> CreateRoomTypeAsync( Guid propertyId, RoomType roomType )
     {
@@ -56,7 +65,7 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task UpdateRoomTypeAsync( RoomType roomType )
     {
-        var existing = await _roomTypeRepository.GetByIdAsync( roomType.Id );
+        var existing = await _roomTypeRepository.GetByIdAsyncForUpdate( roomType.Id );
 
         if ( existing == null )
         {
@@ -71,20 +80,21 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task DeleteRoomTypeAsync( Guid id )
     {
-        var exists = await _roomTypeRepository.ExistsAsync( id );
-        if ( !exists )
+        var roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
+        if ( roomType == null )
         {
             throw new RoomTypeNotFoundException( id );
         }
 
         // Проверка на пересекающиеся брони
-        var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( id, DateOnly.MinValue, DateOnly.MaxValue );
+        int overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( id, DateOnly.MinValue, DateOnly.MaxValue );
+
         if ( overlapping > 0 )
         {
             throw new RoomTypeHasReservationsException( id );
         }
 
-        await _roomTypeRepository.DeleteAsync( id );
+        _roomTypeRepository.Delete( roomType );
         await _unitOfWork.SaveChangesAsync();
     }
 }

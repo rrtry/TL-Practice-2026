@@ -1,7 +1,9 @@
 ﻿using Domain;
 using Domain.Repositories;
+using Domain.Services;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +19,15 @@ public static class InfrastructureServiceExtensions
         services.AddDbContext<AppDbContext>( options =>
             options.UseSqlServer( configuration.GetConnectionString( "DefaultConnection" ) ) );
 
-        services.AddScoped<IPropertyRepository, EfPropertyRepository>();
-        services.AddScoped<IRoomTypeRepository, EfRoomTypeRepository>();
-        services.AddScoped<IReservationRepository, EfReservationRepository>();
+        services.AddScoped<IPropertyRepository, PropertyRepository>();
+        services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+        services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IPropertyService, PropertyService>();
+        services.AddScoped<IRoomTypeService, RoomTypeService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<ISearchService, SearchService>();
 
         return services;
     }

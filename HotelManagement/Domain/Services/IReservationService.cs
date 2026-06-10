@@ -7,6 +7,6 @@ public interface IReservationService
 {
     Task<Reservation> CreateReservationAsync( Reservation reservation );
     Task<IEnumerable<Reservation>> GetFilteredReservationsAsync( ReservationFilter filter );
-    Task<Reservation?> GetReservationByIdAsync( Guid id );
-    Task CancelReservationAsync( Guid id );
+    Task<Reservation> GetReservationByIdAsync( Guid id );
+    Task DeleteReservationAsync( Guid id );
 }

@@ -26,11 +26,21 @@ public class PropertyService : IPropertyService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<Property>> GetAllPropertiesAsync() =>
-        await _propertyRepository.GetAllAsync();
+    public async Task<IEnumerable<Property>> GetAllPropertiesAsync()
+    {
+        return await _propertyRepository.GetAllAsync();
+    }
 
-    public async Task<Property?> GetPropertyByIdAsync( Guid id ) =>
-        await _propertyRepository.GetByIdAsync( id );
+    public async Task<Property> GetPropertyByIdAsync( Guid id )
+    {
+        var property = await _propertyRepository.GetByIdAsync( id );
+        if ( property == null )
+        {
+            throw new PropertyNotFoundException( id );
+        }
+
+        return property;
+    }
 
     public async Task<Property> CreatePropertyAsync( Property property )
     {
@@ -41,7 +51,8 @@ public class PropertyService : IPropertyService
 
     public async Task UpdatePropertyAsync( Property property )
     {
-        var existing = await _propertyRepository.GetByIdAsync( property.Id );
+        var existing = await _propertyRepository.GetByIdAsyncForUpdate( property.Id );
+
         if ( existing == null )
         {
             throw new PropertyNotFoundException( property.Id );
@@ -53,8 +64,9 @@ public class PropertyService : IPropertyService
 
     public async Task DeletePropertyAsync( Guid id )
     {
-        var exists = await _propertyRepository.ExistsAsync( id );
-        if ( !exists )
+        var property = await _propertyRepository.GetByIdAsyncForUpdate( id );
+
+        if ( property == null )
         {
             throw new PropertyNotFoundException( id );
         }
@@ -76,7 +88,7 @@ public class PropertyService : IPropertyService
             throw new InvalidOperationException( "Cannot delete property with existing reservations." );
         }
 
-        await _propertyRepository.DeleteAsync( id );
+        _propertyRepository.Delete( property );
         await _unitOfWork.SaveChangesAsync();
     }
 }

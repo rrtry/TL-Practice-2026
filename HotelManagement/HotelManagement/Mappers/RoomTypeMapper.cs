@@ -39,13 +39,44 @@ public static class RoomTypeMapper
 
     public static void Update( RoomType existing, UpdateRoomTypeRequest request )
     {
-        existing.Name = request.Name;
-        existing.DailyPrice = request.DailyPrice!.Value;
-        existing.Currency = request.Currency;
-        existing.MinPersonCount = request.MinPersonCount!.Value;
-        existing.MaxPersonCount = request.MaxPersonCount!.Value;
-        existing.AvailableRoomsCount = request.AvailableRoomsCount!.Value;
-        existing.Services = request.Services;
-        existing.Amenities = request.Amenities;
+        if ( request.Name != null )
+        {
+            existing.Name = request.Name;
+        }
+
+        if ( request.DailyPrice != null )
+        {
+            existing.DailyPrice = request.DailyPrice!.Value;
+        }
+
+        if ( request.Currency != null )
+        {
+            existing.Currency = request.Currency;
+        }
+
+        if ( request.MinPersonCount != null )
+        {
+            existing.MinPersonCount = request.MinPersonCount!.Value;
+        }
+
+        if ( request.MaxPersonCount != null )
+        {
+            existing.MaxPersonCount = request.MaxPersonCount!.Value;
+        }
+
+        if ( request.AvailableRoomsCount != null )
+        {
+            existing.AvailableRoomsCount = request.AvailableRoomsCount!.Value;
+        }
+
+        if ( request.Services != null )
+        {
+            existing.Services = request.Services;
+        }
+
+        if ( request.Amenities != null )
+        {
+            existing.Amenities = request.Amenities;
+        }
     }
 }
