@@ -1,7 +1,6 @@
 ﻿using Domain;
 using Domain.Entities;
 using Domain.Exceptions;
-using Domain.Filters;
 using Domain.Repositories;
 using Domain.Services;
 
@@ -71,14 +70,9 @@ public class PropertyService : IPropertyService
             throw new PropertyNotFoundException( id );
         }
 
-        if ( await _roomTypeRepository.HasRoomTypesForPropertyAsync( id ) )
-        {
-            throw new InvalidOperationException( "Cannot delete property with existing room types." );
-        }
-
         if ( await _reservationRepository.HasReservationsAsync( id ) )
         {
-            throw new InvalidOperationException( "Cannot delete property with existing reservations." );
+            throw new PropertyHasExistingReservationsException( "Cannot delete property with existing reservations." );
         }
 
         _propertyRepository.Delete( property );

@@ -110,7 +110,7 @@ public class PropertiesControllerTest : IntegrationTestBase
     }
 
     [Fact]
-    public async Task Delete_PropertyWithRoomTypes_ReturnsBadRequest()
+    public async Task Delete_PropertyWithRoomTypes_ReturnsNoContent()
     {
         // Arrange
         var propertyRequest = new CreatePropertyRequest
@@ -142,8 +142,10 @@ public class PropertiesControllerTest : IntegrationTestBase
         var deleteResponse = await _client.DeleteAsync( $"/api/properties/{property.Id}" );
 
         // Assert
-        Assert.Equal( HttpStatusCode.Conflict, deleteResponse.StatusCode );
-        var errorText = await deleteResponse.Content.ReadAsStringAsync();
-        Assert.Contains( "Cannot delete property with existing room types", errorText );
+        Assert.Equal( HttpStatusCode.NoContent, deleteResponse.StatusCode );
+
+        // Check
+        var roomTypesResponse = await _client.GetAsync( $"/api/properties/{property.Id}/roomtypes" );
+        Assert.Equal( HttpStatusCode.NotFound, roomTypesResponse.StatusCode );
     }
 }
