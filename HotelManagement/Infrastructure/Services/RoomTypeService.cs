@@ -87,9 +87,8 @@ public class RoomTypeService : IRoomTypeService
         }
 
         // Проверка на пересекающиеся брони
-        int overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( id, DateOnly.MinValue, DateOnly.MaxValue );
-
-        if ( overlapping > 0 )
+        var anyReservations = await _reservationRepository.HasReservationsAsync( id );
+        if ( anyReservations )
         {
             throw new RoomTypeHasReservationsException( id );
         }

@@ -63,6 +63,11 @@ public class ReservationRepository : IReservationRepository
                 r.DepartureDate > arrival );
     }
 
+    public async Task<bool> HasReservationsAsync( Guid roomTypeId )
+    {
+        return await _context.Reservations.AnyAsync( r => r.RoomTypeId == roomTypeId );
+    }
+
     public async Task<IEnumerable<Reservation>> GetFilteredAsync( ReservationFilter filter )
     {
         var query = _context.Reservations.AsNoTracking().AsQueryable();

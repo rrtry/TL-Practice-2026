@@ -13,4 +13,5 @@ public interface IReservationRepository
     void Delete( Reservation reservation );
     Task<int> GetOverlappingReservationsCountAsync( Guid roomTypeId, DateOnly arrival, DateOnly departure );
     Task<IEnumerable<Reservation>> GetFilteredAsync( ReservationFilter filter );
+    Task<bool> HasReservationsAsync( Guid roomTypeId );
 }

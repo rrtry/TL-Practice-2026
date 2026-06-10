@@ -52,4 +52,10 @@ public class InMemoryRoomTypeRepository : IRoomTypeRepository
     {
         return Task.FromResult( _roomTypes.ContainsKey( id ) );
     }
+
+    public Task<bool> HasRoomTypesForPropertyAsync( Guid propertyId )
+    {
+        var exists = _roomTypes.Values.Any( rt => rt.PropertyId == propertyId );
+        return Task.FromResult( exists );
+    }
 }

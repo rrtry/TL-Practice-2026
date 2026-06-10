@@ -63,4 +63,9 @@ public class RoomTypeRepository : IRoomTypeRepository
     {
         return await _context.RoomTypes.AnyAsync( rt => rt.Id == id );
     }
+
+    public async Task<bool> HasRoomTypesForPropertyAsync( Guid propertyId )
+    {
+        return await _context.RoomTypes.AnyAsync( rt => rt.PropertyId == propertyId );
+    }
 }

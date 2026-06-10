@@ -12,4 +12,5 @@ public interface IRoomTypeRepository
     Task DeleteByIdAsync( Guid id );
     void Delete( RoomType roomType );
     Task<bool> ExistsAsync( Guid id );
+    Task<bool> HasRoomTypesForPropertyAsync( Guid propertyId );
 }

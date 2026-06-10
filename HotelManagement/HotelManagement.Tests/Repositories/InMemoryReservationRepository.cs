@@ -83,4 +83,10 @@ public class InMemoryReservationRepository : IReservationRepository
 
         return Task.FromResult( query.AsEnumerable() );
     }
+
+    public Task<bool> HasReservationsAsync( Guid roomTypeId )
+    {
+        var exists = _reservations.Values.Any( r => r.RoomTypeId == roomTypeId );
+        return Task.FromResult( exists );
+    }
 }

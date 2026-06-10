@@ -71,19 +71,12 @@ public class PropertyService : IPropertyService
             throw new PropertyNotFoundException( id );
         }
 
-        var roomTypes = await _roomTypeRepository.GetByPropertyIdAsync( id );
-        // Нельзя удалить недвижимость с существующими номерами
-        if ( roomTypes.Any() )
+        if ( await _roomTypeRepository.HasRoomTypesForPropertyAsync( id ) )
         {
             throw new InvalidOperationException( "Cannot delete property with existing room types." );
         }
 
-        var filter = new ReservationFilter();
-        filter.PropertyId = id;
-
-        // Нельзя удалить недвижимость с существующими бронями
-        var reservations = await _reservationRepository.GetFilteredAsync( filter );
-        if ( reservations.Any() )
+        if ( await _reservationRepository.HasReservationsAsync( id ) )
         {
             throw new InvalidOperationException( "Cannot delete property with existing reservations." );
         }
