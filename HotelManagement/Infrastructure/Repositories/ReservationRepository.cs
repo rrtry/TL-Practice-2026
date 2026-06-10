@@ -36,7 +36,6 @@ public class ReservationRepository : IReservationRepository
 
     public async Task AddAsync( Reservation reservation )
     {
-        reservation.Id = Guid.NewGuid();
         await _context.Reservations.AddAsync( reservation );
     }
 

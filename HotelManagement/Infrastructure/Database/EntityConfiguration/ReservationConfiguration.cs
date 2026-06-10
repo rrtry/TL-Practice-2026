@@ -12,6 +12,10 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
 
         builder.ToTable( nameof( Reservation ) );
 
+        builder.Property( r => r.Id )
+            .HasDefaultValueSql( "NEWSEQUENTIALID()" )
+            .ValueGeneratedOnAdd();
+
         builder.Property( r => r.ArrivalDate )
             .HasColumnType( "date" )
             .IsRequired();

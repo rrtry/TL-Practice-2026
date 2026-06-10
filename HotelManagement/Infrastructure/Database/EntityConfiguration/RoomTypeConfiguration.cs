@@ -14,6 +14,10 @@ public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
 
         builder.ToTable( nameof( RoomType ) );
 
+        builder.Property( rt => rt.Id )
+            .HasDefaultValueSql( "NEWSEQUENTIALID()" )
+            .ValueGeneratedOnAdd();
+
         builder.Property( rt => rt.Name )
             .IsRequired()
             .HasMaxLength( 255 );

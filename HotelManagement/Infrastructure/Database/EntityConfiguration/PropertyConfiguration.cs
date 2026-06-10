@@ -12,6 +12,10 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
 
         builder.ToTable( nameof( Property ) );
 
+        builder.Property( p => p.Id )
+            .HasDefaultValueSql( "NEWSEQUENTIALID()" )
+            .ValueGeneratedOnAdd();
+
         builder.Property( p => p.Name )
             .IsRequired()
             .HasMaxLength( 255 );

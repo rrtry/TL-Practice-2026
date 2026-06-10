@@ -43,7 +43,6 @@ public class PropertyRepository : IPropertyRepository
 
     public async Task AddAsync( Property property )
     {
-        property.Id = Guid.NewGuid();
         await _context.Properties.AddAsync( property );
     }
 

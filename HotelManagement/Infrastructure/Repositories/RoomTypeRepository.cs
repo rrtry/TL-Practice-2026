@@ -36,7 +36,6 @@ public class RoomTypeRepository : IRoomTypeRepository
 
     public async Task AddAsync( RoomType roomType )
     {
-        roomType.Id = Guid.NewGuid();
         await _context.RoomTypes.AddAsync( roomType );
     }
 
