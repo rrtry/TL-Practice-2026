@@ -4,6 +4,5 @@ namespace HotelManagement.Tests.Fakes;
 
 public class FakeUnitOfWork : IUnitOfWork
 {
-    public Task SaveChangesAsync( CancellationToken cancellationToken = default )
-        => Task.FromResult( 0 );
+    public Task SaveChangesAsync() => Task.FromResult( 0 );
 }

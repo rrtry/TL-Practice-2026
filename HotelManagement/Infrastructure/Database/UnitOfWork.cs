@@ -8,6 +8,5 @@ public class UnitOfWork : IUnitOfWork
 
     public UnitOfWork( AppDbContext context ) => _context = context;
 
-    public Task SaveChangesAsync( CancellationToken cancellationToken = default )
-        => _context.SaveChangesAsync( cancellationToken );
+    public Task SaveChangesAsync() => _context.SaveChangesAsync();
 }
