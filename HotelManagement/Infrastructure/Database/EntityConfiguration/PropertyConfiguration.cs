@@ -10,6 +10,8 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
     {
         builder.HasKey( p => p.Id );
 
+        builder.ToTable( nameof( Property ) );
+
         builder.Property( p => p.Name )
             .IsRequired()
             .HasMaxLength( 255 );

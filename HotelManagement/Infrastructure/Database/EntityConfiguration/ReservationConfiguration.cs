@@ -10,6 +10,8 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
     {
         builder.HasKey( r => r.Id );
 
+        builder.ToTable( nameof( Reservation ) );
+
         builder.Property( r => r.ArrivalDate )
             .HasColumnType( "date" )
             .IsRequired();

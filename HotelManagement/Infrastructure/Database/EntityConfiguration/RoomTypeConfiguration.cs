@@ -12,6 +12,8 @@ public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
     {
         builder.HasKey( rt => rt.Id );
 
+        builder.ToTable( nameof( RoomType ) );
+
         builder.Property( rt => rt.Name )
             .IsRequired()
             .HasMaxLength( 255 );
