@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using HotelManagement.Dto;
+using HotelManagement.WebApi.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Tests.Controllers;

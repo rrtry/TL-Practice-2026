@@ -1,4 +1,4 @@
-﻿namespace HotelManagement.Dto;
+﻿namespace HotelManagement.WebApi.Dto;
 
 public class PropertyResponse
 {

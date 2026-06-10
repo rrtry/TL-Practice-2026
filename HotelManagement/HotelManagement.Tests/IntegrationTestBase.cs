@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using HotelManagement.Dto;
+using HotelManagement.WebApi.Dto;
 
 namespace HotelManagement.Tests;
 

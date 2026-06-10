@@ -1,6 +1,6 @@
 ﻿using Domain.Services;
-using HotelManagement.Dto;
-using HotelManagement.Mappers;
+using HotelManagement.WebApi.Dto;
+using HotelManagement.WebApi.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.WebApi.Controllers;

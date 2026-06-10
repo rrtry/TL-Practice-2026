@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
-using HotelManagement.Dto;
+using HotelManagement.WebApi.Dto;
 
-namespace HotelManagement.Mappers;
+namespace HotelManagement.WebApi.Mappers;
 
 public static class RoomTypeMapper
 {

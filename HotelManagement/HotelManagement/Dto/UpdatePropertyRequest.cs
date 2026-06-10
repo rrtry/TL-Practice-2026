@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Dto;
+namespace HotelManagement.WebApi.Dto;
 
 public class UpdatePropertyRequest
 {

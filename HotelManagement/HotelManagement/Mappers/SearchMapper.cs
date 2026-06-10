@@ -1,8 +1,8 @@
 ﻿using Domain.Filters;
 using Domain.Models;
-using HotelManagement.Dto;
+using HotelManagement.WebApi.Dto;
 
-namespace HotelManagement.Mappers;
+namespace HotelManagement.WebApi.Mappers;
 
 public static class SearchMapper
 {
