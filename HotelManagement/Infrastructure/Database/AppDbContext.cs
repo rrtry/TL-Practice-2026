@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Database.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database;
@@ -13,6 +14,8 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating( ModelBuilder modelBuilder )
     {
-        modelBuilder.ApplyConfigurationsFromAssembly( typeof( AppDbContext ).Assembly );
+        modelBuilder.ApplyConfiguration( new PropertyConfiguration() );
+        modelBuilder.ApplyConfiguration( new ReservationConfiguration() );
+        modelBuilder.ApplyConfiguration( new RoomTypeConfiguration() );
     }
 }
