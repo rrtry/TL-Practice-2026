@@ -29,7 +29,7 @@ public class ReservationService : IReservationService
     public async Task<Reservation> CreateReservationAsync( Reservation reservation )
     {
         // Дата заселения должна предшествовать дате отбытия
-        ValidateDates( reservation );
+        ValidateDateAndTime( reservation );
 
         // Существует ли недвижимость
         await ValidatePropertyExistsAsync( reservation.PropertyId );
@@ -84,7 +84,7 @@ public class ReservationService : IReservationService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private void ValidateDates( Reservation reservation )
+    private void ValidateDateAndTime( Reservation reservation )
     {
         if ( reservation.ArrivalDate >= reservation.DepartureDate )
         {

@@ -65,15 +65,6 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task UpdateRoomTypeAsync( RoomType roomType )
     {
-        var existing = await _roomTypeRepository.GetByIdAsyncForUpdate( roomType.Id );
-
-        if ( existing == null )
-        {
-            throw new RoomTypeNotFoundException( roomType.Id );
-        }
-
-        roomType.PropertyId = existing.PropertyId;
-
         await _roomTypeRepository.UpdateAsync( roomType );
         await _unitOfWork.SaveChangesAsync();
     }

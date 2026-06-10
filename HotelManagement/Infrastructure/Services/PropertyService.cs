@@ -51,13 +51,6 @@ public class PropertyService : IPropertyService
 
     public async Task UpdatePropertyAsync( Property property )
     {
-        var existing = await _propertyRepository.GetByIdAsyncForUpdate( property.Id );
-
-        if ( existing == null )
-        {
-            throw new PropertyNotFoundException( property.Id );
-        }
-
         await _propertyRepository.UpdateAsync( property );
         await _unitOfWork.SaveChangesAsync();
     }
