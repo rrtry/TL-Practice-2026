@@ -45,6 +45,7 @@ public class PropertyService : IPropertyService
     {
         await _propertyRepository.AddAsync( property );
         await _unitOfWork.SaveChangesAsync();
+
         return property;
     }
 

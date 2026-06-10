@@ -55,7 +55,7 @@ public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
         builder.HasOne<Property>()
             .WithMany()
             .HasForeignKey( rt => rt.PropertyId )
-            .OnDelete( DeleteBehavior.Restrict )
+            .OnDelete( DeleteBehavior.Cascade )
             .IsRequired();
     }
 }
