@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HotelManagement.WebApi.Validators;
 
 namespace HotelManagement.WebApi.Dto;
 
@@ -9,7 +10,7 @@ public class CreatePropertyRequest
     public string Name { get; set; } = null!;
 
     [Required( ErrorMessage = "Property Country is required" )]
-    [StringLength( 3, MinimumLength = 3, ErrorMessage = "Property Country length should be 3" )]
+    [CountryCode( ErrorMessage = "Property Country must be a valid ISO 3166-1 country code" )]
     public string Country { get; set; } = null!;
 
     [Required( ErrorMessage = "Property City is required" )]

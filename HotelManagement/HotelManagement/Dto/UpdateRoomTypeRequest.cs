@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HotelManagement.WebApi.Validators;
 
 namespace HotelManagement.WebApi.Dto;
 
@@ -10,7 +11,7 @@ public class UpdateRoomTypeRequest
     [Range( 0, double.MaxValue, ErrorMessage = "RoomType DailyPrice must be non-negative" )]
     public decimal? DailyPrice { get; set; } = null;
 
-    [StringLength( 3, MinimumLength = 3, ErrorMessage = "RoomType Currency length must be 3" )]
+    [CurrencyCode( ErrorMessage = "RoomType Currency must be a valid ISO 4217 currency code." )]
     public string? Currency { get; set; } = null;
 
     [Range( 1, int.MaxValue, ErrorMessage = "RoomType MinPersonCount must be >= 1" )]

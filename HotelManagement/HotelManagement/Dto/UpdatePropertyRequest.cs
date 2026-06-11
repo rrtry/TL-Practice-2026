@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HotelManagement.WebApi.Validators;
 
 namespace HotelManagement.WebApi.Dto;
 
@@ -7,7 +8,7 @@ public class UpdatePropertyRequest
     [StringLength( 255, MinimumLength = 1, ErrorMessage = "Property Name length should be in range: [1;255]" )]
     public string? Name { get; set; } = null;
 
-    [StringLength( 3, MinimumLength = 3, ErrorMessage = "Property Country length should be 3" )]
+    [CountryCode( ErrorMessage = "Property Country must be a valid ISO 3166-1 country code" )]
     public string? Country { get; set; } = null;
 
     [StringLength( 255, MinimumLength = 1, ErrorMessage = "Property City length should be in range: [1;255]" )]

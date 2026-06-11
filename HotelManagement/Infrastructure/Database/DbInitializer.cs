@@ -19,7 +19,7 @@ public static class DbInitializer
         {
             Id = Guid.NewGuid(),
             Name = "Гранд Отель Москва",
-            Country = "Россия",
+            Country = "RUS",
             City = "Москва",
             Address = "Тверская ул., 1",
             Latitude = 55.7558,
@@ -30,7 +30,7 @@ public static class DbInitializer
         {
             Id = Guid.NewGuid(),
             Name = "Приморский Резорт",
-            Country = "Россия",
+            Country = "RUS",
             City = "Сочи",
             Address = "Набережная, 5",
             Latitude = 43.5855,
@@ -41,7 +41,7 @@ public static class DbInitializer
         {
             Id = Guid.NewGuid(),
             Name = "Невский Палас",
-            Country = "Россия",
+            Country = "RUS",
             City = "Санкт-Петербург",
             Address = "Невский просп., 100",
             Latitude = 59.9343,
@@ -52,7 +52,7 @@ public static class DbInitializer
         {
             Id = Guid.NewGuid(),
             Name = "Казанский Дворик",
-            Country = "Россия",
+            Country = "RUS",
             City = "Казань",
             Address = "ул. Баумана, 10",
             Latitude = 55.7964,
