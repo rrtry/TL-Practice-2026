@@ -52,15 +52,6 @@ public class PropertyRepository : IPropertyRepository
         return Task.CompletedTask;
     }
 
-    public async Task DeleteByIdAsync( Guid id )
-    {
-        var entity = await _context.Properties.FindAsync( id );
-        if ( entity != null )
-        {
-            _context.Properties.Remove( entity );
-        }
-    }
-
     public void Delete( Property property )
     {
         _context.Properties.Remove( property );

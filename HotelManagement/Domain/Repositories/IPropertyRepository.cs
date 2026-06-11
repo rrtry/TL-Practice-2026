@@ -10,7 +10,6 @@ public interface IPropertyRepository
     Task<Property?> GetByIdAsync( Guid id );
     Task AddAsync( Property property );
     Task UpdateAsync( Property property );
-    Task DeleteByIdAsync( Guid id );
     void Delete( Property property );
     Task<bool> ExistsAsync( Guid id );
 }

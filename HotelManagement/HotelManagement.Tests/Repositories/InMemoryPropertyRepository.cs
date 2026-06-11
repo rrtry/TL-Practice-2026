@@ -43,12 +43,6 @@ public class InMemoryPropertyRepository : IPropertyRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteByIdAsync( Guid id )
-    {
-        _properties.TryRemove( id, out _ );
-        return Task.CompletedTask;
-    }
-
     public void Delete( Property property )
     {
         _properties.TryRemove( property.Id, out _ );

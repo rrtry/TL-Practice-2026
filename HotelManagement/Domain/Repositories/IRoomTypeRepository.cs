@@ -9,7 +9,6 @@ public interface IRoomTypeRepository
     Task<RoomType?> GetByIdAsync( Guid id );
     Task AddAsync( RoomType roomType );
     Task UpdateAsync( RoomType roomType );
-    Task DeleteByIdAsync( Guid id );
     void Delete( RoomType roomType );
     Task<bool> ExistsAsync( Guid id );
     Task<bool> HasRoomTypesForPropertyAsync( Guid propertyId );

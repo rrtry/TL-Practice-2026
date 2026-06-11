@@ -44,15 +44,6 @@ public class ReservationRepository : IReservationRepository
         _context.Reservations.Remove( reservation );
     }
 
-    public async Task DeleteAsyncById( Guid id )
-    {
-        var entity = await _context.Reservations.FindAsync( id );
-        if ( entity != null )
-        {
-            _context.Reservations.Remove( entity );
-        }
-    }
-
     public async Task<int> GetOverlappingReservationsCountAsync(
         Guid roomTypeId, DateOnly arrival, DateOnly departure )
     {

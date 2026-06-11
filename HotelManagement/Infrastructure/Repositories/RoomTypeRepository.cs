@@ -45,15 +45,6 @@ public class RoomTypeRepository : IRoomTypeRepository
         return Task.CompletedTask;
     }
 
-    public async Task DeleteByIdAsync( Guid id )
-    {
-        var entity = await _context.RoomTypes.FindAsync( id );
-        if ( entity != null )
-        {
-            _context.RoomTypes.Remove( entity );
-        }
-    }
-
     public void Delete( RoomType roomType )
     {
         _context.RoomTypes.Remove( roomType );

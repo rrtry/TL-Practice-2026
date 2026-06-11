@@ -38,12 +38,6 @@ public class InMemoryRoomTypeRepository : IRoomTypeRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteByIdAsync( Guid id )
-    {
-        _roomTypes.TryRemove( id, out _ );
-        return Task.CompletedTask;
-    }
-
     public void Delete( RoomType roomType )
     {
         _roomTypes.TryRemove( roomType.Id, out _ );

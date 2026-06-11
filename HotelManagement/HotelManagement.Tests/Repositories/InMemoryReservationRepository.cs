@@ -32,12 +32,6 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsyncById( Guid id )
-    {
-        _reservations.TryRemove( id, out _ );
-        return Task.CompletedTask;
-    }
-
     public void Delete( Reservation reservation )
     {
         _reservations.TryRemove( reservation.Id, out _ );
