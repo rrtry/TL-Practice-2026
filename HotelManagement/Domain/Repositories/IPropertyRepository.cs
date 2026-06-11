@@ -6,7 +6,7 @@ public interface IPropertyRepository
 {
     Task<IEnumerable<Property>> GetAllAsync();
     Task<IEnumerable<Property>> GetByCityAsync( string city );
-    Task<Property?> GetByIdAsyncForUpdate( Guid id );
+    Task<Property?> GetByIdForUpdateAsync( Guid id );
     Task<Property?> GetByIdAsync( Guid id );
     Task AddAsync( Property property );
     Task UpdateAsync( Property property );

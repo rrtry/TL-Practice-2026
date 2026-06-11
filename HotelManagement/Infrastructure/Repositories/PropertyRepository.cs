@@ -36,7 +36,7 @@ public class PropertyRepository : IPropertyRepository
             .FirstOrDefaultAsync( p => p.Id == id );
     }
 
-    public async Task<Property?> GetByIdAsyncForUpdate( Guid id )
+    public async Task<Property?> GetByIdForUpdateAsync( Guid id )
     {
         return await _context.Properties.FindAsync( id );
     }

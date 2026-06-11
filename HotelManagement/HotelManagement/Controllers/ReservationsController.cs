@@ -43,7 +43,6 @@ public class ReservationsController : ControllerBase
     public async Task<IActionResult> GetById( Guid id )
     {
         var reservation = await _reservationService.GetReservationByIdAsync( id );
-
         return Ok( ReservationMapper.MapEntityToResponse( reservation ) );
     }
 
@@ -51,7 +50,6 @@ public class ReservationsController : ControllerBase
     public async Task<IActionResult> Delete( Guid id )
     {
         await _reservationService.DeleteReservationAsync( id );
-
         return NoContent();
     }
 }

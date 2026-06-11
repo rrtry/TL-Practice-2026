@@ -48,6 +48,18 @@ public class RoomTypeService : IRoomTypeService
         return roomType;
     }
 
+    public async Task<RoomType> GetRoomTypeByIdForUpdateAsync( Guid id )
+    {
+        var roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
+
+        if ( roomType == null )
+        {
+            throw new RoomTypeNotFoundException( id );
+        }
+
+        return roomType;
+    }
+
     public async Task<RoomType> CreateRoomTypeAsync( Guid propertyId, RoomType roomType )
     {
         if ( !await _propertyRepository.ExistsAsync( propertyId ) )

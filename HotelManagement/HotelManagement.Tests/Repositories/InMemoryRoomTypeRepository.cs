@@ -28,6 +28,7 @@ public class InMemoryRoomTypeRepository : IRoomTypeRepository
     {
         roomType.Id = Guid.NewGuid();
         _roomTypes.TryAdd( roomType.Id, roomType );
+
         return Task.CompletedTask;
     }
 

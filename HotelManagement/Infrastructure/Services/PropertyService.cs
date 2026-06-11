@@ -9,18 +9,15 @@ namespace Infrastructure.Services;
 public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _propertyRepository;
-    private readonly IRoomTypeRepository _roomTypeRepository;
     private readonly IReservationRepository _reservationRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public PropertyService(
         IPropertyRepository propertyRepository,
-        IRoomTypeRepository roomTypeRepository,
         IReservationRepository reservationRepository,
         IUnitOfWork unitOfWork )
     {
         _propertyRepository = propertyRepository;
-        _roomTypeRepository = roomTypeRepository;
         _reservationRepository = reservationRepository;
         _unitOfWork = unitOfWork;
     }
@@ -33,6 +30,18 @@ public class PropertyService : IPropertyService
     public async Task<Property> GetPropertyByIdAsync( Guid id )
     {
         var property = await _propertyRepository.GetByIdAsync( id );
+        if ( property == null )
+        {
+            throw new PropertyNotFoundException( id );
+        }
+
+        return property;
+    }
+
+    public async Task<Property> GetPropertyByIdForUpdateAsync( Guid id )
+    {
+        var property = await _propertyRepository.GetByIdForUpdateAsync( id );
+
         if ( property == null )
         {
             throw new PropertyNotFoundException( id );
@@ -57,7 +66,7 @@ public class PropertyService : IPropertyService
 
     public async Task DeletePropertyAsync( Guid id )
     {
-        var property = await _propertyRepository.GetByIdAsyncForUpdate( id );
+        var property = await _propertyRepository.GetByIdForUpdateAsync( id );
 
         if ( property == null )
         {

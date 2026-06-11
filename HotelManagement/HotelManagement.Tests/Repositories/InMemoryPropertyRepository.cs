@@ -18,7 +18,7 @@ public class InMemoryPropertyRepository : IPropertyRepository
         return Task.FromResult( _properties.TryGetValue( id, out var prop ) ? prop : null );
     }
 
-    public Task<Property?> GetByIdAsyncForUpdate( Guid id )
+    public Task<Property?> GetByIdForUpdateAsync( Guid id )
     {
         return Task.FromResult( _properties.TryGetValue( id, out var prop ) ? prop : null );
     }
