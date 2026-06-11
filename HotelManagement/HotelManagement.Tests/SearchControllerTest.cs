@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Tests.Controllers;
 
-public class SearchControllerTests : IntegrationTestBase
+public class SearchControllerTests : ControllerTestBase
 {
     public SearchControllerTests( CustomWebApplicationFactory factory ) : base( factory ) { }
 

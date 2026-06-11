@@ -3,12 +3,12 @@ using HotelManagement.WebApi.Dto;
 
 namespace HotelManagement.Tests;
 
-public class IntegrationTestBase : IClassFixture<CustomWebApplicationFactory>
+public class ControllerTestBase : IClassFixture<CustomWebApplicationFactory>
 {
     protected readonly HttpClient _client;
     protected readonly CustomWebApplicationFactory _factory;
 
-    public IntegrationTestBase( CustomWebApplicationFactory factory )
+    public ControllerTestBase( CustomWebApplicationFactory factory )
     {
         _factory = factory;
         _client = factory.CreateClient();
