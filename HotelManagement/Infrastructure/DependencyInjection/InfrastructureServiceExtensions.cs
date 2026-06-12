@@ -12,11 +12,11 @@ namespace Infrastructure.DependencyInjection;
 
 public static class InfrastructureServiceExtensions
 {
-    public static IServiceCollection AddInfrastructure(
+    public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services,
         IConfiguration configuration )
     {
-        services.AddDbContext<AppDbContext>( options =>
+        services.AddDbContext<HotelManagementDbContext>( options =>
             options.UseSqlServer( configuration.GetConnectionString( "DefaultConnection" ) ) );
 
         services.AddScoped<IPropertyRepository, PropertyRepository>();

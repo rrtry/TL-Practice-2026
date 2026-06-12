@@ -8,9 +8,9 @@ namespace Infrastructure.Repositories;
 
 public class ReservationRepository : IReservationRepository
 {
-    private readonly AppDbContext _context;
+    private readonly HotelManagementDbContext _context;
 
-    public ReservationRepository( AppDbContext context )
+    public ReservationRepository( HotelManagementDbContext context )
     {
         _context = context;
     }

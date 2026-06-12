@@ -4,9 +4,9 @@ namespace Infrastructure.Database;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly AppDbContext _context;
+    private readonly HotelManagementDbContext _context;
 
-    public UnitOfWork( AppDbContext context ) => _context = context;
+    public UnitOfWork( HotelManagementDbContext context ) => _context = context;
 
     public Task SaveChangesAsync() => _context.SaveChangesAsync();
 }

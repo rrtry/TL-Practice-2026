@@ -5,7 +5,7 @@ namespace Infrastructure.Database;
 
 public static class DbInitializer
 {
-    public static async Task SeedAsync( AppDbContext context )
+    public static async Task SeedAsync( HotelManagementDbContext context )
     {
         await context.Database.EnsureCreatedAsync();
 

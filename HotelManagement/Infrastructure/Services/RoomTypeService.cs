@@ -38,19 +38,7 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<RoomType> GetRoomTypeByIdAsync( Guid id )
     {
-        var roomType = await _roomTypeRepository.GetByIdAsync( id );
-
-        if ( roomType == null )
-        {
-            throw new RoomTypeNotFoundException( id );
-        }
-
-        return roomType;
-    }
-
-    public async Task<RoomType> GetRoomTypeByIdForUpdateAsync( Guid id )
-    {
-        var roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
+        RoomType? roomType = await _roomTypeRepository.GetByIdAsync( id );
 
         if ( roomType == null )
         {
@@ -75,22 +63,21 @@ public class RoomTypeService : IRoomTypeService
         return roomType;
     }
 
-    public async Task UpdateRoomTypeAsync( RoomType roomType )
+    public async Task UpdateRoomTypeAsync( Guid id, Action<RoomType> applyChanges )
     {
+        RoomType roomType = await GetRoomTypeByIdForUpdateAsync( id );
+        applyChanges( roomType );
+
         await _roomTypeRepository.UpdateAsync( roomType );
         await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteRoomTypeAsync( Guid id )
     {
-        var roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
-        if ( roomType == null )
-        {
-            throw new RoomTypeNotFoundException( id );
-        }
+        RoomType roomType = await GetRoomTypeByIdForUpdateAsync( id );
 
         // Проверка на пересекающиеся брони
-        var anyReservations = await _reservationRepository.HasReservationsAsync( id );
+        bool anyReservations = await _reservationRepository.HasReservationsAsync( id );
         if ( anyReservations )
         {
             throw new RoomTypeHasReservationsException( id );
@@ -98,5 +85,17 @@ public class RoomTypeService : IRoomTypeService
 
         _roomTypeRepository.Delete( roomType );
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task<RoomType> GetRoomTypeByIdForUpdateAsync( Guid id )
+    {
+        RoomType? roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
+
+        if ( roomType == null )
+        {
+            throw new RoomTypeNotFoundException( id );
+        }
+
+        return roomType;
     }
 }

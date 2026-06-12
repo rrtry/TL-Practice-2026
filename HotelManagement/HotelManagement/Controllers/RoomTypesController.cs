@@ -26,11 +26,7 @@ public class RoomTypesController : ControllerBase
     [HttpPut( "{id}" )]
     public async Task<IActionResult> Update( Guid id, [FromBody] UpdateRoomTypeRequest request )
     {
-        var existing = await _roomTypeService.GetRoomTypeByIdForUpdateAsync( id );
-
-        RoomTypeMapper.Update( existing, request );
-        await _roomTypeService.UpdateRoomTypeAsync( existing );
-
+        await _roomTypeService.UpdateRoomTypeAsync( id, roomType => RoomTypeMapper.Update( roomType, request ) );
         return NoContent();
     }
 

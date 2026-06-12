@@ -22,14 +22,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             RemoveServiceByType( services, typeof( IReservationRepository ) );
 
             var dbContextDescriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof( DbContextOptions<Infrastructure.Database.AppDbContext> ) );
+                d => d.ServiceType == typeof( DbContextOptions<Infrastructure.Database.HotelManagementDbContext> ) );
 
             if ( dbContextDescriptor != null )
             {
                 services.Remove( dbContextDescriptor );
             }
 
-            RemoveServiceByType( services, typeof( Infrastructure.Database.AppDbContext ) );
+            RemoveServiceByType( services, typeof( Infrastructure.Database.HotelManagementDbContext ) );
             RemoveServiceByType( services, typeof( IUnitOfWork ) );
 
             services.AddSingleton<IPropertyRepository, InMemoryPropertyRepository>();

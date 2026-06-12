@@ -13,7 +13,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddInfrastructure( builder.Configuration );
+        builder.Services.AddInfrastructureServices( builder.Configuration );
 
         var app = builder.Build();
 
@@ -24,7 +24,7 @@ public class Program
             app.UseSwaggerUI();
 
             using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<HotelManagementDbContext>();
             await DbInitializer.SeedAsync( dbContext );
         }
 

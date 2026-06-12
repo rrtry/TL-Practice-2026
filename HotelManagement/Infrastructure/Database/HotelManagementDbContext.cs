@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database;
 
-public class AppDbContext : DbContext
+public class HotelManagementDbContext : DbContext
 {
-    public AppDbContext( DbContextOptions<AppDbContext> options ) : base( options ) { }
+    public HotelManagementDbContext( DbContextOptions<HotelManagementDbContext> options ) : base( options ) { }
 
     public DbSet<Property> Properties => Set<Property>();
     public DbSet<RoomType> RoomTypes => Set<RoomType>();

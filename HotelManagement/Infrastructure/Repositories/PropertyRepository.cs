@@ -7,9 +7,9 @@ namespace Infrastructure.Repositories;
 
 public class PropertyRepository : IPropertyRepository
 {
-    private readonly AppDbContext _context;
+    private readonly HotelManagementDbContext _context;
 
-    public PropertyRepository( AppDbContext context )
+    public PropertyRepository( HotelManagementDbContext context )
     {
         _context = context;
     }

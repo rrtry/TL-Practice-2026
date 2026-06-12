@@ -29,19 +29,7 @@ public class PropertyService : IPropertyService
 
     public async Task<Property> GetPropertyByIdAsync( Guid id )
     {
-        var property = await _propertyRepository.GetByIdAsync( id );
-        if ( property == null )
-        {
-            throw new PropertyNotFoundException( id );
-        }
-
-        return property;
-    }
-
-    public async Task<Property> GetPropertyByIdForUpdateAsync( Guid id )
-    {
-        var property = await _propertyRepository.GetByIdForUpdateAsync( id );
-
+        Property? property = await _propertyRepository.GetByIdAsync( id );
         if ( property == null )
         {
             throw new PropertyNotFoundException( id );
@@ -58,20 +46,18 @@ public class PropertyService : IPropertyService
         return property;
     }
 
-    public async Task UpdatePropertyAsync( Property property )
+    public async Task UpdatePropertyAsync( Guid id, Action<Property> applyChanges )
     {
+        Property property = await GetPropertyByIdForUpdateAsync( id );
+        applyChanges( property );
+
         await _propertyRepository.UpdateAsync( property );
         await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeletePropertyAsync( Guid id )
     {
-        var property = await _propertyRepository.GetByIdForUpdateAsync( id );
-
-        if ( property == null )
-        {
-            throw new PropertyNotFoundException( id );
-        }
+        Property property = await GetPropertyByIdAsync( id );
 
         if ( await _reservationRepository.HasReservationsAsync( id ) )
         {
@@ -80,5 +66,17 @@ public class PropertyService : IPropertyService
 
         _propertyRepository.Delete( property );
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task<Property> GetPropertyByIdForUpdateAsync( Guid id )
+    {
+        Property? property = await _propertyRepository.GetByIdForUpdateAsync( id );
+
+        if ( property == null )
+        {
+            throw new PropertyNotFoundException( id );
+        }
+
+        return property;
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(HotelManagementDbContext))]
     [Migration("20260610230748_CascadeDeleteRoomTypes")]
     partial class CascadeDeleteRoomTypes
     {

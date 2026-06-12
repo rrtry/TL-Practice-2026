@@ -44,11 +44,7 @@ public class PropertiesController : ControllerBase
     [HttpPut( "{id}" )]
     public async Task<IActionResult> Update( Guid id, [FromBody] UpdatePropertyRequest request )
     {
-        var existing = await _propertyService.GetPropertyByIdForUpdateAsync( id );
-
-        PropertyMapper.Update( existing, request );
-        await _propertyService.UpdatePropertyAsync( existing );
-
+        await _propertyService.UpdatePropertyAsync( id, property => PropertyMapper.Update( property, request ) );
         return NoContent();
     }
 

@@ -63,7 +63,7 @@ public class ReservationService : IReservationService
 
     public async Task<Reservation> GetReservationByIdAsync( Guid id )
     {
-        var reservation = await _reservationRepository.GetByIdAsync( id );
+        Reservation? reservation = await _reservationRepository.GetByIdAsync( id );
         if ( reservation == null )
         {
             throw new ReservationNotFoundException( id );
@@ -74,7 +74,7 @@ public class ReservationService : IReservationService
 
     public async Task DeleteReservationAsync( Guid id )
     {
-        var reservation = await _reservationRepository.GetByIdAsyncForUpdate( id );
+        Reservation? reservation = await _reservationRepository.GetByIdAsyncForUpdate( id );
         if ( reservation == null )
         {
             throw new ReservationNotFoundException( id );
@@ -116,7 +116,7 @@ public class ReservationService : IReservationService
 
     private async Task<RoomType> ValidateAndGetRoomTypeAsync( Guid roomTypeId, Guid propertyId )
     {
-        var roomType = await _roomTypeRepository.GetByIdAsync( roomTypeId );
+        RoomType? roomType = await _roomTypeRepository.GetByIdAsync( roomTypeId );
         if ( roomType == null )
         {
             throw new RoomTypeNotFoundException( roomTypeId );
