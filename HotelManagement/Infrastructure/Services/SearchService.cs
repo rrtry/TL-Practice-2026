@@ -47,7 +47,7 @@ public class SearchService : ISearchService
                 }
 
                 // Доступность
-                var overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( rt.Id, filter.ArrivalDate, filter.DepartureDate );
+                int overlapping = await _reservationRepository.GetOverlappingReservationsCountAsync( rt.Id, filter.ArrivalDate, filter.DepartureDate );
 
                 if ( overlapping >= rt.AvailableRoomsCount )
                 {

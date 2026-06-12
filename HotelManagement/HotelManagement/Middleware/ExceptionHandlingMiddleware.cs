@@ -35,6 +35,8 @@ public class ExceptionHandlingMiddleware
             RoomTypeMismatchException => (HttpStatusCode.BadRequest, exception.Message),
             RoomTypeHasReservationsException => (HttpStatusCode.BadRequest, exception.Message),
             InvalidDateRangeException => (HttpStatusCode.BadRequest, exception.Message),
+            InvalidArrivalDateException => (HttpStatusCode.BadRequest, exception.Message),
+            InvalidArrivalTimeException => (HttpStatusCode.BadRequest, exception.Message),
             GuestCountOutOfRangeException => (HttpStatusCode.BadRequest, exception.Message),
             NoAvailableRoomsException => (HttpStatusCode.Conflict, exception.Message),
 

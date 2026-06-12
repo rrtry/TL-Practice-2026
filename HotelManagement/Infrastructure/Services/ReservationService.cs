@@ -35,7 +35,7 @@ public class ReservationService : IReservationService
         await ValidatePropertyExistsAsync( reservation.PropertyId );
 
         // Существует ли тип номера
-        var roomType = await ValidateAndGetRoomTypeAsync( reservation.RoomTypeId, reservation.PropertyId );
+        RoomType roomType = await ValidateAndGetRoomTypeAsync( reservation.RoomTypeId, reservation.PropertyId );
 
         // Проверка кол-ва гостей
         ValidateGuestCount( reservation.GuestCount, roomType );
