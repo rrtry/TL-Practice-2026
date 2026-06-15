@@ -22,7 +22,7 @@ public class RoomTypeRepository : IRoomTypeRepository
             .ToListAsync();
     }
 
-    public async Task<RoomType?> GetByIdAsyncForUpdate( Guid id )
+    public async Task<RoomType?> GetByIdForUpdateAsync( Guid id )
     {
         return await _context.RoomTypes.FindAsync( id );
     }

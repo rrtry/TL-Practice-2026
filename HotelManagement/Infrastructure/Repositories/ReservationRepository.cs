@@ -29,7 +29,7 @@ public class ReservationRepository : IReservationRepository
             .FirstOrDefaultAsync( r => r.Id == id );
     }
 
-    public async Task<Reservation?> GetByIdAsyncForUpdate( Guid id )
+    public async Task<Reservation?> GetByIdForUpdateAsync( Guid id )
     {
         return await _context.Reservations.FindAsync( id );
     }

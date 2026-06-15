@@ -74,7 +74,7 @@ public class ReservationService : IReservationService
 
     public async Task DeleteReservationAsync( Guid id )
     {
-        Reservation? reservation = await _reservationRepository.GetByIdAsyncForUpdate( id );
+        Reservation? reservation = await _reservationRepository.GetByIdForUpdateAsync( id );
         if ( reservation == null )
         {
             throw new ReservationNotFoundException( id );

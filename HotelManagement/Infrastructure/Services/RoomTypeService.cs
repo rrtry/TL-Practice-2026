@@ -89,7 +89,7 @@ public class RoomTypeService : IRoomTypeService
 
     private async Task<RoomType> GetRoomTypeByIdForUpdateAsync( Guid id )
     {
-        RoomType? roomType = await _roomTypeRepository.GetByIdAsyncForUpdate( id );
+        RoomType? roomType = await _roomTypeRepository.GetByIdForUpdateAsync( id );
 
         if ( roomType == null )
         {
