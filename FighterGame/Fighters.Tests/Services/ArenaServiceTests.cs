@@ -1,11 +1,8 @@
-﻿using Fighters.Models.Armors;
-using Fighters.Models.Classes;
-using Fighters.Models.Fighters;
-using Fighters.Models.Races;
-using Fighters.Models.Weapons;
+﻿using Fighters.Models.Fighters;
 using Fighters.Services.Arena;
 using Fighters.Services.Environment;
 using Fighters.Services.Randomization;
+using Fighters.Tests.Factories;
 using Moq;
 
 namespace Fighters.Tests.Services;
@@ -52,6 +49,7 @@ public class ArenaServiceTests
 
         var f1 = new Mock<IFighter>().Object;
         var f2 = new Mock<IFighter>().Object;
+
         arena.AddFighter( f1 );
         arena.AddFighter( f2 );
 
@@ -101,14 +99,14 @@ public class ArenaServiceTests
         var randMock = new Mock<IRandomService>();
         var arena = new ArenaService( envMock.Object, randMock.Object );
 
-        var fighter1Mock = new Mock<IFighter>();
-        fighter1Mock.Setup( f => f.ToString() ).Returns( "Fighter1Info" );
+        var fighter1 = new Mock<IFighter>();
+        fighter1.Setup( f => f.ToString() ).Returns( "Fighter1Info" );
 
-        var fighter2Mock = new Mock<IFighter>();
-        fighter2Mock.Setup( f => f.ToString() ).Returns( "Fighter2Info" );
+        var fighter2 = new Mock<IFighter>();
+        fighter2.Setup( f => f.ToString() ).Returns( "Fighter2Info" );
 
-        arena.AddFighter( fighter1Mock.Object );
-        arena.AddFighter( fighter2Mock.Object );
+        arena.AddFighter( fighter1.Object );
+        arena.AddFighter( fighter2.Object );
 
         // Act
         arena.ListFighters();
@@ -128,7 +126,13 @@ public class ArenaServiceTests
         var envMock = new Mock<IEnvironmentService>();
         var randMock = new Mock<IRandomService>();
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        arena.AddFighter( CreateFighter( "A", 100, 10, 0, 5 ) );
+
+        var fighter = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 100, damage: 10, armor: 0, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( fighter );
 
         // Act
         arena.SimulateBattle();
@@ -150,8 +154,15 @@ public class ArenaServiceTests
         SetupFixedNonCriticalDamage( randMock, 0.5 ); // множитель урона 0.95, не крит
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        var fighterA = CreateFighter( "A", health: 100, damage: 50, armor: 0, initiative: 10 );
-        var fighterB = CreateFighter( "B", health: 30, damage: 10, armor: 0, initiative: 5 );
+        var fighterA = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 100, damage: 50, armor: 0, initiative: 10 )
+            .Build();
+
+        var fighterB = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 30, damage: 10, armor: 0, initiative: 5 )
+            .Build();
 
         arena.AddFighter( fighterA );
         arena.AddFighter( fighterB );
@@ -185,18 +196,27 @@ public class ArenaServiceTests
         var envMock = new Mock<IEnvironmentService>();
         var randMock = new Mock<IRandomService>();
 
-        // Настройка последовательности Next:
-        // 1-й вызов: A выбирает из 2 противников → 1 (C)
-        // 2-й вызов: B выбирает из 1 противника (остался только A) → 0 (A)
+        randMock.Setup( r => r.Next( It.IsAny<int>() ) ).Returns( 0 ); // Явно 0, а не default int = 0 по умолчанию
         randMock.SetupSequence( r => r.Next( It.IsAny<int>() ) )
-                .Returns( 1 )  // A -> C
-                .Returns( 0 ); // B -> A
+                .Returns( 1 )
+                .Returns( 0 );
         randMock.Setup( r => r.NextDouble() ).Returns( 0.6 );
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        var fighterA = CreateFighter( "A", health: 100, damage: 50, armor: 0, initiative: 10 );
-        var fighterB = CreateFighter( "B", health: 80, damage: 20, armor: 0, initiative: 7 );
-        var fighterC = CreateFighter( "C", health: 40, damage: 30, armor: 0, initiative: 5 );
+        var fighterA = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 100, damage: 50, armor: 0, initiative: 10 )
+            .Build();
+
+        var fighterB = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 80, damage: 20, armor: 0, initiative: 7 )
+            .Build();
+
+        var fighterC = new FighterBuilder()
+            .WithName( "C" )
+            .WithRaceStats( health: 40, damage: 30, armor: 0, initiative: 5 )
+            .Build();
 
         arena.AddFighter( fighterA );
         arena.AddFighter( fighterB );
@@ -227,9 +247,24 @@ public class ArenaServiceTests
         randMock.Setup( r => r.NextDouble() ).Returns( 0.6 );
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        arena.AddFighter( CreateFighter( "A", 50, 20, 0, 10 ) );
-        arena.AddFighter( CreateFighter( "B", 50, 20, 0, 7 ) );
-        arena.AddFighter( CreateFighter( "C", 50, 20, 0, 5 ) );
+        var f1 = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 50, damage: 20, armor: 0, initiative: 10 )
+            .Build();
+
+        var f2 = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 50, damage: 20, armor: 0, initiative: 7 )
+            .Build();
+
+        var f3 = new FighterBuilder()
+            .WithName( "C" )
+            .WithRaceStats( health: 50, damage: 20, armor: 0, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( f1 );
+        arena.AddFighter( f2 );
+        arena.AddFighter( f3 );
 
         arena.SimulateBattle();
 
@@ -252,8 +287,15 @@ public class ArenaServiceTests
         randMock.Setup( r => r.NextDouble() ).Returns( 0.6 );
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        var fighterA = CreateFighter( "A", health: 100, damage: 40, armor: 5, initiative: 10 );
-        var fighterB = CreateFighter( "B", health: 50, damage: 15, armor: 30, initiative: 5 );
+        var fighterA = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 100, damage: 40, armor: 5, initiative: 10 )
+            .Build();
+
+        var fighterB = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 50, damage: 15, armor: 30, initiative: 5 )
+            .Build();
 
         arena.AddFighter( fighterA );
         arena.AddFighter( fighterB );
@@ -291,13 +333,24 @@ public class ArenaServiceTests
         randMock.Setup( r => r.NextDouble() ).Returns( 0.0 );
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
-        var a = CreateFighter( "A", health: 10000, damage: 10, armor: 0, initiative: 10 );
-        var b = CreateFighter( "B", health: 10000, damage: 10, armor: 0, initiative: 7 );
-        var c = CreateFighter( "C", health: 10000, damage: 10, armor: 0, initiative: 5 );
+        var fighterA = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 10000, damage: 10, armor: 0, initiative: 10 )
+            .Build();
 
-        arena.AddFighter( a );
-        arena.AddFighter( b );
-        arena.AddFighter( c );
+        var fighterB = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 10000, damage: 10, armor: 0, initiative: 7 )
+            .Build();
+
+        var fighterC = new FighterBuilder()
+            .WithName( "C" )
+            .WithRaceStats( health: 10000, damage: 10, armor: 0, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( fighterA );
+        arena.AddFighter( fighterB );
+        arena.AddFighter( fighterC );
 
         // Act
         arena.SimulateBattle();
@@ -305,7 +358,7 @@ public class ArenaServiceTests
         // Урон 8 за раунд (10*0.8), здоровье 10000
         envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Лимит раундов исчерпан." ) ) ), Times.Once );
         // Все трое живы
-        Assert.True( a.GetCurrentHealth() > 0 && b.GetCurrentHealth() > 0 && c.GetCurrentHealth() > 0 );
+        Assert.True( fighterA.GetCurrentHealth() > 0 && fighterB.GetCurrentHealth() > 0 && fighterC.GetCurrentHealth() > 0 );
     }
 
     [Fact]
@@ -335,24 +388,6 @@ public class ArenaServiceTests
         envMock.Verify( e => e.WriteLine( "Введите число от 1 до 2." ), Times.Exactly( 3 ) );
         envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.StartsWith( "Боец под номером" ) ) ), Times.Once );
         Assert.Single( arena.Fighters );
-    }
-
-    private static IFighter CreateFighter( string name, int health, int damage, int armor, int initiative )
-    {
-        var raceMock = new Mock<IRace>();
-        raceMock.Setup( r => r.Health ).Returns( health );
-        raceMock.Setup( r => r.Damage ).Returns( damage );
-        raceMock.Setup( r => r.Armor ).Returns( armor );
-        raceMock.Setup( r => r.Initiative ).Returns( initiative );
-
-        var classMock = new Mock<IClass>();
-        classMock.Setup( c => c.Health ).Returns( 0 );
-        classMock.Setup( c => c.Damage ).Returns( 0 );
-        classMock.Setup( c => c.Armor ).Returns( 0 );
-        classMock.Setup( c => c.Initiative ).Returns( 0 );
-
-        return new Fighter( name, raceMock.Object, classMock.Object,
-            Mock.Of<IWeapon>(), Mock.Of<IArmor>() );
     }
 
     private static void SetupFixedNonCriticalDamage( Mock<IRandomService> randMock, double factor = 0.5 )

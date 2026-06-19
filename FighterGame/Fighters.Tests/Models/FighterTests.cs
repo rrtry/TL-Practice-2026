@@ -88,14 +88,14 @@ public class FighterTests
 
         var random = new Mock<IRandomService>();
         random.SetupSequence( r => r.NextDouble() )
-            .Returns( 1.0 )   // множитель 0.8+0.3*1.0 = 1.1 (максимальный)
-            .Returns( 0.5 );  // не критический удар
+            .Returns( 1.0 )
+            .Returns( 0.5 );
 
         // Act
         var stats = fighter.TakeDamage( random.Object, attacker );
 
         // Assert
-        Assert.Equal( 33, stats.Damage ); // 30 * 1.1 = 33
+        Assert.Equal( 33, stats.Damage );
         Assert.False( stats.IsCritical );
         Assert.Equal( 67, fighter.GetCurrentHealth() );
     }
@@ -116,20 +116,19 @@ public class FighterTests
 
         var random = new Mock<IRandomService>();
         random.SetupSequence( r => r.NextDouble() )
-            .Returns( 0.8 )   // множитель 0.8+0.3*0.8 = 1.04
-            .Returns( 0.5 );  // не критический
+            .Returns( 0.0 )
+            .Returns( 0.5 ); // не критический
 
         // Act
         var stats = fighter.TakeDamage( random.Object, attacker );
 
-        // Assert - расчет:
-        // baseDamage = max(0, 20 - 10) = 10
-        // piercingDamage = 20*0.1 = 2 -> baseDamage = max( 10, 2) = 10
-        // randomDamage = 10 * 1.04 = 10 (целое)
-        // finalDamage = 10 (не крит)
-        int expectedDamage = ( int )( Math.Max( 0, 20 - 10 ) * 1.04 );
+        // Assert
+        const int expectedDamage = 8;
+        const int expectedHealth = 92;
+
         Assert.Equal( expectedDamage, stats.Damage );
-        Assert.Equal( 100 - expectedDamage, fighter.GetCurrentHealth() );
+        Assert.False( stats.IsCritical );
+        Assert.Equal( expectedHealth, fighter.GetCurrentHealth() );
     }
 
     [Fact]
@@ -148,17 +147,19 @@ public class FighterTests
 
         var random = new Mock<IRandomService>();
         random.SetupSequence( r => r.NextDouble() )
-            .Returns( 0.8 )
+            .Returns( 1.0 )
             .Returns( 0.5 );
 
         // Act
         var stats = fighter.TakeDamage( random.Object, attacker );
 
-        // Assert: piercingDamage = 2, baseDamage = max(0, 20 - 50) = 0
-        // randomDamage = 2 * 1.04 = 2
-        int expectedDamage = ( int )( 2 * 1.04 );
+        const int expectedDamage = 2;
+        const int expectedHealth = 98;
+
+        // Assert
         Assert.Equal( expectedDamage, stats.Damage );
-        Assert.Equal( 100 - expectedDamage, fighter.GetCurrentHealth() );
+        Assert.False( stats.IsCritical );
+        Assert.Equal( expectedHealth, fighter.GetCurrentHealth() );
     }
 
     [Fact]
@@ -176,8 +177,8 @@ public class FighterTests
 
         var random = new Mock<IRandomService>();
         random.SetupSequence( r => r.NextDouble() )
-            .Returns( 0.9 )   // множитель 0.8+0.3*0.9 = 1.07
-            .Returns( 0.05 ); // критический ( < 0.1)
+            .Returns( 0.9 )
+            .Returns( 0.05 );
 
         // Act
         var stats = fighter.TakeDamage( random.Object, attacker );
