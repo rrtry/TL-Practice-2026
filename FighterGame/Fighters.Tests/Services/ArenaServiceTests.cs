@@ -318,8 +318,6 @@ public class ArenaServiceTests
                .Returns( "0" )    // меньше 1 -> ошибка
                .Returns( "3" )    // больше 2 (всего два бойца) -> ошибка
                .Returns( "1" );   // корректный индекс
-        envMock.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        envMock.Setup( e => e.Write( It.IsAny<string>() ) );
 
         var randMock = new Mock<IRandomService>();
         var arena = new ArenaService( envMock.Object, randMock.Object );

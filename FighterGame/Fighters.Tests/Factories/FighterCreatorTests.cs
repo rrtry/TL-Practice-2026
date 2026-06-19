@@ -7,21 +7,23 @@ namespace Fighters.Tests.Factories;
 
 public class FighterCreatorTests
 {
-    [Fact]
-    public void CreateFighter_ReadsNameAndChoices_ReturnsCorrectFighter()
+    [Theory]
+    [MemberData( nameof( ValidInputsData ) )]
+    public void CreateFighter_WithValidInputs_BuildsFighterMatchingChoices(
+        IReadOnlyList<string> allInputs,
+        string expectedName,
+        int expectedMaxHealth,
+        int expectedDamage,
+        int expectedArmor,
+        int expectedInitiative )
     {
         // Arrange
         var env = new Mock<IEnvironmentService>();
-        // Последовательность ввода: имя, выбор расы (0), класса (1), оружия (2), брони (3)
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "John" ) // имя
-            .Returns( "0" )    // раса Human
-            .Returns( "1" )    // класс NCRTrooperClass
-            .Returns( "2" )    // оружие Machete
-            .Returns( "3" );   // броня NoArmor
-
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
+        var sequence = env.SetupSequence( e => e.ReadLine() );
+        foreach ( var input in allInputs )
+        {
+            sequence.Returns( input );
+        }
 
         var creator = new FighterCreator( env.Object );
 
@@ -29,64 +31,114 @@ public class FighterCreatorTests
         IFighter fighter = creator.CreateFighter();
 
         // Assert
-        Assert.Equal( "John", fighter.Name );
-        Assert.Equal( 100 + 25, fighter.GetMaxHealth() );       // Human (100) + NCRTrooper (25)
-        Assert.Equal( 5 + 10 + 18, fighter.CalculateDamage() ); // Human(5) + NCR(10) + Machete(18) = 33
-        Assert.Equal( 2 + 8 + 0, fighter.CalculateArmor() );    // Human(2)+NCR(8)+NoArmor(0)=10
-        Assert.Equal( 10 + 10, fighter.GetInitiative() );       // Human(10) + NCR(10) = 20
+        Assert.Equal( expectedName, fighter.Name );
+        Assert.Equal( expectedMaxHealth, fighter.GetMaxHealth() );
+        Assert.Equal( expectedDamage, fighter.CalculateDamage() );
+        Assert.Equal( expectedArmor, fighter.CalculateArmor() );
+        Assert.Equal( expectedInitiative, fighter.GetInitiative() );
 
-        // Проверяем, что были вызваны WriteLine для меню выбора
         env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите расу" ) ) ), Times.Once );
         env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите класс" ) ) ), Times.Once );
         env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите оружие" ) ) ), Times.Once );
         env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите броню" ) ) ), Times.Once );
     }
 
-    [Fact]
-    public void CreateFighter_InvalidName_RetriesUntilValid()
+    public static TheoryData<string[], string, int, int, int, int> ValidInputsData()
     {
-        // Arrange
-        var env = new Mock<IEnvironmentService>();
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "" )       // пустое имя -> ошибка
-            .Returns( "   " )    // пробелы -> ошибка
-            .Returns( "Legion" ) // корректное имя
-            .Returns( "0" )      // выбор расы (Human)
-            .Returns( "0" )      // выбор класса (LegionSoldierClass)
-            .Returns( "0" )      // выбор оружия (Fists)
-            .Returns( "0" );     // выбор брони (CaesarArmor)
+        var data = new TheoryData<string[], string, int, int, int, int>();
 
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
+        // 1: Human + LegionSoldierClass + Fists + CaesarArmor
+        data.Add(
+            [ "John", "0", "0", "0", "0" ],
+            "John",
+            // Health: Human 100 + LegionSoldier 30
+            100 + 30,
+            // Damage: Human 5 + LegionSoldier 12 + Fists 8
+            5 + 12 + 8,
+            // Armor: Human 2 + LegionSoldier 6 + CaesarArmor 10
+            2 + 6 + 10,
+            // Initiative: Human 10 + LegionSoldier 12
+            10 + 12
+        );
 
-        var creator = new FighterCreator( env.Object );
+        // 2: Ghoul + NCRTrooperClass + Axe + PowerArmor
+        data.Add(
+            [ "Lucy", "1", "1", "1", "1" ],
+            "Lucy",
+            // Health: Ghoul 110 + NCRTrooper 25
+            110 + 25,
+            // Damage: Ghoul 6 + NCRTrooper 10 + Axe 20
+            6 + 10 + 20,
+            // Armor: Ghoul 2 + NCRTrooper 8 + PowerArmor 20
+            2 + 8 + 20,
+            // Initiative: Ghoul 8 + NCRTrooper 10
+            8 + 10
+        );
 
-        // Act
-        IFighter fighter = creator.CreateFighter();
+        // 3: Mutant + BrotherhoodKnight + Machete + NoArmor
+        data.Add(
+            [ "Marcus", "2", "2", "2", "3" ],
+            "Marcus",
+            // Health: Mutant 120 + BrotherhoodKnight 40
+            120 + 40,
+            // Damage: Mutant 15 + Knight 8 + Machete 18
+            15 + 8 + 18,
+            // Armor: Mutant 8 + Knight 5 + NoArmor 0
+            8 + 5 + 0,
+            // Initiative: Mutant 6 + Knight 7
+            6 + 7
+        );
 
-        // Assert
-        Assert.Equal( "Legion", fighter.Name );
-        // Два раза была ошибка: пустая строка и пробелы
-        env.Verify( e => e.WriteLine( "Имя не может быть пустым." ), Times.Exactly( 2 ) );
+        // 4: Human + MojaveWanderer + Fists + CombatArmor
+        data.Add(
+            [ "Alice", "0", "3", "0", "2" ],
+            "Alice",
+            // Health: Human 100 + Wanderer 20
+            100 + 20,
+            // Damage: Human 5 + Wanderer 7 + Fists 8
+            5 + 7 + 8,
+            // Armor: Human 2 + Wanderer 5 + CombatArmor 15
+            2 + 5 + 15,
+            // Initiative: Human 10 + Wanderer 6
+            10 + 6
+        );
+
+        // 5: Ghoul + BrotherhoodKnight + Machete + CaesarArmor
+        data.Add(
+            [ "Nick", "1", "2", "2", "0" ],
+            "Nick",
+            // Health: Ghoul 110 + Knight 40
+            110 + 40,
+            // Damage: Ghoul 6 + Knight 8 + Machete 18
+            6 + 8 + 18,
+            // Armor: Ghoul 2 + Knight 5 + CaesarArmor 10
+            2 + 5 + 10,
+            // Initiative: Ghoul 8 + Knight 7
+            8 + 7
+        );
+
+        return data;
     }
 
-    [Fact]
-    public void CreateFighter_InvalidRaceSelection_RetriesUntilValid()
+    [Theory]
+    [MemberData( nameof( InvalidNumericInputsData ) )]
+    public void CreateFighter_InvalidNumericInputs_RetriesUntilValid(
+        IReadOnlyList<string> allInputs,
+        string expectedErrorMessage,
+        int expectedErrorCount,
+        int expectedMaxHealth,
+        int expectedDamage,
+        int expectedArmor,
+        int expectedInitiative )
     {
         // Arrange
         var env = new Mock<IEnvironmentService>();
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "Hero" )
-            .Returns( "abc" ) // не число
-            .Returns( "-1" )  // < 0
-            .Returns( "3" )   // > 2 (максимальный индекс для рас)
-            .Returns( "1" )   // корректно (Ghoul)
-            .Returns( "0" )   // класс
-            .Returns( "0" )   // оружие
-            .Returns( "0" );  // броня
+        var sequence = env.SetupSequence( e => e.ReadLine() );
 
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
+        foreach ( var input in allInputs )
+        {
+            sequence.Returns( input );
+        }
 
         var creator = new FighterCreator( env.Object );
 
@@ -94,108 +146,61 @@ public class FighterCreatorTests
         IFighter fighter = creator.CreateFighter();
 
         // Assert
-        Assert.Equal( "Hero", fighter.Name );
-        // Проверяем, что сообщение об ошибке выбора расы выводилось 3 раза
-        env.Verify( e => e.WriteLine( "Введите число от 0 до 2." ), Times.Exactly( 3 ) );
-
-        // Ghoul health 110, damage 6, armor 2, initiative 8
-        // LegionSoldierClass health 30, damage 12, armor 6, initiative 12
-        // Fists damage 8, CaesarArmor armor 10
-        Assert.Equal( 110 + 30, fighter.GetMaxHealth() );
-        Assert.Equal( 6 + 12 + 8, fighter.CalculateDamage() );
-        Assert.Equal( 2 + 6 + 10, fighter.CalculateArmor() );
-        Assert.Equal( 8 + 12, fighter.GetInitiative() );
+        env.Verify( e => e.WriteLine( expectedErrorMessage ), Times.Exactly( expectedErrorCount ) );
+        Assert.Equal( expectedMaxHealth, fighter.GetMaxHealth() );
+        Assert.Equal( expectedDamage, fighter.CalculateDamage() );
+        Assert.Equal( expectedArmor, fighter.CalculateArmor() );
+        Assert.Equal( expectedInitiative, fighter.GetInitiative() );
     }
 
-    [Fact]
-    public void CreateFighter_InvalidClassSelection_RetriesUntilValid()
+    public static TheoryData<IReadOnlyList<string>, string, int, int, int, int, int> InvalidNumericInputsData()
     {
-        // Arrange
-        var env = new Mock<IEnvironmentService>();
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "Knight" )
-            .Returns( "0" )     // раса Human
-            .Returns( "" )      // пустой ввод (не число)
-            .Returns( "4" )     // > 3 (макс индекс для классов)
-            .Returns( "2" )     // корректно: BrotherhoodKnight
-            .Returns( "0" )     // оружие
-            .Returns( "0" );    // броня
+        var data = new TheoryData<IReadOnlyList<string>, string, int, int, int, int, int>();
 
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
+        // Тест на расу
+        data.Add(
+            [ "Hero", "abc", "-1", "3", "1", "0", "0", "0" ],
+            "Введите число от 0 до 2.",
+            3,
+            110 + 30,   // Ghoul health 110 + LegionSoldier health 30
+            6 + 12 + 8, // Ghoul 6 + LegionSoldier 12 + Fists 8
+            2 + 6 + 10, // Ghoul 2 + LegionSoldier 6 + CaesarArmor 10
+            8 + 12      // Ghoul 8 + LegionSoldier 12
+        );
 
-        var creator = new FighterCreator( env.Object );
+        // Тест на класс
+        data.Add(
+            [ "Knight", "0", "", "4", "2", "0", "0" ],
+            "Введите число от 0 до 3.",
+            2,
+            100 + 40,   // Human 100 + Knight 40
+            5 + 8 + 8,  // Human 5 + Knight 8 + Fists 8
+            2 + 5 + 10, // Human 2 + Knight 5 + CaesarArmor 10
+            10 + 7      // Human 10 + Knight 7
+        );
 
-        // Act
-        IFighter fighter = creator.CreateFighter();
+        // Тест на оружие
+        data.Add(
+            [ "Warrior", "0", "0", "10", "1", "0" ],
+            "Введите число от 0 до 2.",
+            1,
+            100 + 30,    // Human 100 + LegionSoldier 30
+            5 + 12 + 20, // Human 5 + LegionSoldier 12 + Axe 20
+            2 + 6 + 10,  // Human 2 + LegionSoldier 6 + CaesarArmor 10
+            10 + 12      // Human + LegionSoldier
+        );
 
-        // Assert
-        Assert.Equal( "Knight", fighter.Name );
+        // Тест на броню
+        data.Add(
+            [ "Tank", "0", "0", "0", "-5", "4", "2" ],
+            "Введите число от 0 до 3.",
+            2,
+            100 + 30,   // Human + LegionSoldier
+            5 + 12 + 8, // Human 5 + LegionSoldier 12 + Fists 8
+            2 + 6 + 15, // Human 2 + LegionSoldier 6 + CombatArmor 15
+            10 + 12     // Human + LegionSoldier
+        );
 
-        // Дважды ошибка выбора класса (пустая строка и 4)
-        env.Verify( e => e.WriteLine( "Введите число от 0 до 3." ), Times.Exactly( 2 ) );
-        // Характеристики Human + BrotherhoodKnight + Fists + CaesarArmor
-        Assert.Equal( 100 + 40, fighter.GetMaxHealth() );
-        Assert.Equal( 5 + 8 + 8, fighter.CalculateDamage() );
-        Assert.Equal( 2 + 5 + 10, fighter.CalculateArmor() );
-        Assert.Equal( 10 + 7, fighter.GetInitiative() );
-    }
-
-    [Fact]
-    public void CreateFighter_InvalidWeaponSelection_RetriesUntilValid()
-    {
-        // Arrange
-        var env = new Mock<IEnvironmentService>();
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "Warrior" )
-            .Returns( "0" )     // раса
-            .Returns( "0" )     // класс
-            .Returns( "10" )    // > 2 (максимум для оружия)
-            .Returns( "1" )     // корректно: Axe
-            .Returns( "0" );    // броня
-
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
-
-        var creator = new FighterCreator( env.Object );
-
-        // Act
-        IFighter fighter = creator.CreateFighter();
-
-        // Assert
-        Assert.Equal( "Warrior", fighter.Name );
-        env.Verify( e => e.WriteLine( "Введите число от 0 до 2." ), Times.Once );
-        // Human + LegionSoldier + Axe (20) + CaesarArmor
-        Assert.Equal( 5 + 12 + 20, fighter.CalculateDamage() );
-    }
-
-    [Fact]
-    public void CreateFighter_InvalidArmorSelection_RetriesUntilValid()
-    {
-        // Arrange
-        var env = new Mock<IEnvironmentService>();
-        env.SetupSequence( e => e.ReadLine() )
-            .Returns( "Tank" )
-            .Returns( "0" )  // раса
-            .Returns( "0" )  // класс
-            .Returns( "0" )  // оружие
-            .Returns( "-5" ) // < 0
-            .Returns( "4" )  // > 3 (макс индекс для брони)
-            .Returns( "2" ); // корректно: CombatArmor
-
-        env.Setup( e => e.WriteLine( It.IsAny<string>() ) );
-        env.Setup( e => e.Write( It.IsAny<string>() ) );
-
-        var creator = new FighterCreator( env.Object );
-
-        // Act
-        IFighter fighter = creator.CreateFighter();
-
-        // Assert
-        Assert.Equal( "Tank", fighter.Name );
-        // Две ошибки для брони
-        env.Verify( e => e.WriteLine( "Введите число от 0 до 3." ), Times.Exactly( 2 ) );
-        // броня: Human(2) + LegionSoldier(6) + CombatArmor(15) = 23
-        Assert.Equal( 2 + 6 + 15, fighter.CalculateArmor() );
+        return data;
     }
 }

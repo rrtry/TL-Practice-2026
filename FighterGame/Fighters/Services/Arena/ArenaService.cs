@@ -23,8 +23,6 @@ public class ArenaService
         _rand = rand;
     }
 
-    public List<IFighter> GetFighters() => _fighters;
-
     public void SimulateBattle()
     {
         if ( _fighters.Count() < 2 )
