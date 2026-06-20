@@ -1,0 +1,57 @@
+﻿using Domain.Services;
+using HotelManagement.WebApi.Dto;
+using HotelManagement.WebApi.Mappers;
+using Microsoft.AspNetCore.Mvc;
+
+namespace HotelManagement.WebApi.Controllers;
+
+[ApiController]
+[Route( "api/properties" )]
+public class PropertiesController : ControllerBase
+{
+    private readonly IPropertyService _propertyService;
+
+    public PropertiesController( IPropertyService propertyService )
+    {
+        _propertyService = propertyService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var properties = await _propertyService.GetAllPropertiesAsync();
+        var responses = properties.Select( p => PropertyMapper.MapEntityToResponse( p ) );
+
+        return Ok( responses );
+    }
+
+    [HttpGet( "{id}" )]
+    public async Task<IActionResult> GetById( Guid id )
+    {
+        var property = await _propertyService.GetPropertyByIdAsync( id );
+        return Ok( PropertyMapper.MapEntityToResponse( property ) );
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create( [FromBody] CreatePropertyRequest request )
+    {
+        var property = PropertyMapper.MapCreateRequestToEntity( request );
+        var created = await _propertyService.CreatePropertyAsync( property );
+
+        return CreatedAtAction( nameof( GetById ), new { id = created.Id }, PropertyMapper.MapEntityToResponse( created ) );
+    }
+
+    [HttpPut( "{id}" )]
+    public async Task<IActionResult> Update( Guid id, [FromBody] UpdatePropertyRequest request )
+    {
+        await _propertyService.UpdatePropertyAsync( id, property => PropertyMapper.Update( property, request ) );
+        return NoContent();
+    }
+
+    [HttpDelete( "{id}" )]
+    public async Task<IActionResult> Delete( Guid id )
+    {
+        await _propertyService.DeletePropertyAsync( id );
+        return NoContent();
+    }
+}
