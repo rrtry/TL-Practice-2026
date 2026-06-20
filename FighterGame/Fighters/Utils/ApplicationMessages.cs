@@ -24,8 +24,6 @@ public static class ApplicationMessages
 
     public static string ArenaWinner( string name ) => $"\n{name} выживает и побеждает!";
 
-    public static string ArenaDraw => "\nНичья! Все бойцы погибли.";
-
     public static string ArenaMaxRoundsExhausted( string name ) =>
         $"\nЛимит раундов исчерпан. Самым живучим оказался {name}!";
 
