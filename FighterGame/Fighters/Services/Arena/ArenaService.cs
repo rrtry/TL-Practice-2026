@@ -27,7 +27,7 @@ public class ArenaService
     {
         if ( _fighters.Count() < 2 )
         {
-            _env.WriteLine( "Добавьте как минимум 2-ух бойцов на арену" );
+            _env.WriteLine( ApplicationMessages.ArenaNotEnoughFighters );
             return;
         }
 
@@ -37,7 +37,7 @@ public class ArenaService
         while ( _alive.Count > 1 && round <= MAX_ROUNDS )
         {
             round++;
-            _env.WriteLine( $"\nРаунд {round}" );
+            _env.WriteLine( ApplicationMessages.ArenaRoundHeader( round ) );
             SimulateRound();
         }
 
@@ -50,20 +50,20 @@ public class ArenaService
     public void AddFighter( IFighter fighter )
     {
         _fighters.Add( fighter );
-        _env.WriteLine( $"Боец {fighter.Name} добавлен на арену!" );
+        _env.WriteLine( ApplicationMessages.ArenaFighterAdded( fighter.Name ) );
     }
 
     public void RemoveFighter()
     {
-        _env.Write( "Ввёдите номер бойца: " );
+        _env.Write( ApplicationMessages.ArenaPromptRemoveFighter );
         int removeAt = EnvironmentUtils.ReadIntInRange( _env, 1, _fighters.Count() );
-        _env.WriteLine( $"Боец под номером {removeAt} удалён" );
+        _env.WriteLine( ApplicationMessages.ArenaFighterRemoved( removeAt ) );
         _fighters.RemoveAt( removeAt - 1 );
     }
 
     public void ListFighters()
     {
-        _env.WriteLine( $"\nКол-во бойцов: {_fighters.Count()}" );
+        _env.WriteLine( ApplicationMessages.ArenaFightersCount( _fighters.Count() ) );
         for ( int i = 0; i < _fighters.Count(); i++ )
         {
             IFighter fighter = _fighters[ i ];
@@ -98,8 +98,7 @@ public class ArenaService
         damageDealt[ attacker ] = damageDealt.GetValueOrDefault( attacker ) + damageStats.Damage;
         damageReceived[ target ] = damageReceived.GetValueOrDefault( target ) + damageStats.Damage;
 
-        _env.WriteLine( $"{attacker.Name} атакует {target.Name} и наносит {damageStats.Damage} урона" +
-                          ( damageStats.IsCritical ? " (критический удар!)" : "" ) );
+        _env.WriteLine( ApplicationMessages.ArenaAttackMessage( attacker.Name, target.Name, damageStats.Damage, damageStats.IsCritical ) );
     }
 
     private void PrintRoundDamageStats(
@@ -110,9 +109,10 @@ public class ArenaService
     {
         foreach ( var fighter in turnOrder )
         {
-            string dealt = damageDealt.ContainsKey( fighter ) ? damageDealt[ fighter ].ToString() : "0";
-            string received = damageReceived.ContainsKey( fighter ) ? damageReceived[ fighter ].ToString() : "0";
-            _env.WriteLine( $"{fighter.Name} наносит {dealt} урона, получает {received}" );
+            int dealt = damageDealt.ContainsKey( fighter ) ? damageDealt[ fighter ] : 0;
+            int received = damageReceived.ContainsKey( fighter ) ? damageReceived[ fighter ] : 0;
+
+            _env.WriteLine( ApplicationMessages.ArenaRoundDamageStats( fighter.Name, dealt, received ) );
         }
     }
 
@@ -121,7 +121,7 @@ public class ArenaService
         var survived = _fighters.Where( f => f.GetCurrentHealth() > 0 ).ToList();
         foreach ( var dead in _alive.Except( survived ) )
         {
-            _env.WriteLine( $"{dead.Name} погибает!" );
+            _env.WriteLine( ApplicationMessages.ArenaFighterDied( dead.Name ) );
         }
 
         _alive = survived;
@@ -158,16 +158,12 @@ public class ArenaService
     {
         if ( _alive.Count == 1 )
         {
-            _env.WriteLine( $"\n{_alive[ 0 ].Name} выживает и побеждает!" );
-        }
-        else if ( _alive.Count == 0 )
-        {
-            _env.WriteLine( "\nНичья! Все бойцы погибли." );
+            _env.WriteLine( ApplicationMessages.ArenaWinner( _alive.First().Name ) );
         }
         else
         {
             IFighter winner = _alive.OrderByDescending( fighter => fighter.GetCurrentHealth() ).First();
-            _env.WriteLine( $"\nЛимит раундов исчерпан. Самым живучим оказался {winner.Name}!" );
+            _env.WriteLine( ApplicationMessages.ArenaMaxRoundsExhausted( winner.Name ) );
         }
     }
 }

@@ -44,14 +44,12 @@ public class FighterBuilder
     public FighterBuilder WithWeaponDamage( int damage )
     {
         _weaponMock.Setup( w => w.Damage ).Returns( damage );
-
         return this;
     }
 
     public FighterBuilder WithArmorValue( int armor )
     {
         _armorMock.Setup( a => a.Armor ).Returns( armor );
-
         return this;
     }
 

@@ -3,6 +3,7 @@ using Fighters.Services.Arena;
 using Fighters.Services.Environment;
 using Fighters.Services.Randomization;
 using Fighters.Tests.Factories;
+using Fighters.Utils;
 using Moq;
 
 namespace Fighters.Tests.Services;
@@ -16,6 +17,7 @@ public class ArenaServiceTests
         var envMock = new Mock<IEnvironmentService>();
         var randMock = new Mock<IRandomService>();
         var arena = new ArenaService( envMock.Object, randMock.Object );
+
         var fighterMock = new Mock<IFighter>();
         fighterMock.Setup( f => f.Name ).Returns( "TestFighter" );
 
@@ -23,7 +25,7 @@ public class ArenaServiceTests
         arena.AddFighter( fighterMock.Object );
 
         // Assert
-        envMock.Verify( e => e.WriteLine( "Боец TestFighter добавлен на арену!" ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFighterAdded( fighterMock.Object.Name ) ), Times.Once );
         Assert.Contains( fighterMock.Object, arena.Fighters );
     }
 
@@ -36,7 +38,7 @@ public class ArenaServiceTests
 
         arena.ListFighters();
 
-        envMock.Verify( e => e.WriteLine( "\nКол-во бойцов: 0" ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFightersCount( 0 ) ), Times.Once );
         envMock.Verify( e => e.Write( It.IsAny<string>() ), Times.Never );
     }
 
@@ -83,8 +85,8 @@ public class ArenaServiceTests
         arena.RemoveFighter();
 
         // Assert
-        envMock.Verify( e => e.Write( "Ввёдите номер бойца: " ), Times.Once );
-        envMock.Verify( e => e.WriteLine( "Боец под номером 1 удалён" ), Times.Once );
+        envMock.Verify( e => e.Write( ApplicationMessages.ArenaPromptRemoveFighter ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFighterRemoved( 1 ) ), Times.Once );
 
         var fighters = arena.Fighters;
         Assert.Single( fighters );
@@ -112,7 +114,7 @@ public class ArenaServiceTests
         arena.ListFighters();
 
         // Assert
-        envMock.Verify( e => e.WriteLine( "\nКол-во бойцов: 2" ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFightersCount( 2 ) ), Times.Once );
         envMock.Verify( e => e.Write( "1 - " ), Times.Once );
         envMock.Verify( e => e.Write( "Fighter1Info" ), Times.Once );
         envMock.Verify( e => e.Write( "2 - " ), Times.Once );
@@ -138,8 +140,8 @@ public class ArenaServiceTests
         arena.SimulateBattle();
 
         // Assert
-        envMock.Verify( e => e.WriteLine( "Добавьте как минимум 2-ух бойцов на арену" ), Times.Once );
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Раунд" ) ) ), Times.Never );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaNotEnoughFighters ), Times.Once );
+        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.ArenaRoundHeader( 1 ) ) ) ), Times.Never );
     }
 
     [Fact]
@@ -149,9 +151,8 @@ public class ArenaServiceTests
         var envMock = new Mock<IEnvironmentService>();
         var randMock = new Mock<IRandomService>();
 
-        // выбор противника всегда первый (индекс 0)
         randMock.Setup( r => r.Next( It.IsAny<int>() ) ).Returns( 0 );
-        SetupFixedNonCriticalDamage( randMock, 0.5 ); // множитель урона 0.95, не крит
+        SetupFixedNonCriticalDamage( randMock, 0.5 );
 
         var arena = new ArenaService( envMock.Object, randMock.Object );
         var fighterA = new FighterBuilder()
@@ -172,10 +173,10 @@ public class ArenaServiceTests
 
         // Assert
         // Ожидаемый урон от A = 50 * 0.95 = 47 (B умирает)
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Раунд 1" ) ) ), Times.Once );
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "A атакует B" ) ) ), Times.Once );
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "B погибает!" ) ) ), Times.Once );
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "A выживает и побеждает!" ) ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaRoundHeader( 1 ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaAttackMessage( fighterA.Name, fighterB.Name, 47, false ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFighterDied( fighterB.Name ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaWinner( fighterA.Name ) ), Times.Once );
     }
 
     [Fact]
@@ -227,11 +228,11 @@ public class ArenaServiceTests
 
         // Assert
         // C погибает от удара A в первом раунде
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "C погибает!" ) ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.ArenaFighterDied( fighterC.Name ) ) ) ), Times.Once );
         // C ни разу не атаковал (был убит до своего хода)
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "C атакует" ) ) ), Times.Never );
+        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.ArenaFighterAttacks( fighterC.Name ) ) ) ), Times.Never );
         // B атакует как минимум один раз
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "B атакует" ) ) ), Times.AtLeastOnce );
+        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.ArenaFighterAttacks( fighterB.Name ) ) ) ), Times.AtLeastOnce );
 
         // C мёртв
         Assert.Equal( 0, fighterC.GetCurrentHealth() );
@@ -303,23 +304,21 @@ public class ArenaServiceTests
         // Act
         arena.SimulateBattle();
 
-        // Расчеты урона с множителем 0.98:
-        // A -> B: baseDamage = max(0,40-30)=10, 10 * 0.98 = 9
-        // B -> A: baseDamage = max(0,15-5)=10,  10 * 0.98 = 9
-        // Здоровье B: 50 -> 41 -> 32 -> 23 -> 14 -> 5 -> -4 (смерть на 6-м раунде)
-        // Здоровье A: 100 -> 91 -> 82 -> 73 -> 64 -> 55 (после 5 раундов, т.к. в 6-м B не ходит)
-
+        // Assert
         Assert.Equal( 0, fighterB.GetCurrentHealth() );
         Assert.Equal( 55, fighterA.GetCurrentHealth() );
 
+        string fighterAMessage = ApplicationMessages.ArenaAttackMessage( fighterA.Name, fighterB.Name, 9, false );
+        string fighterBMessage = ApplicationMessages.ArenaAttackMessage( fighterB.Name, fighterA.Name, 9, false );
+
         envMock.Verify( e => e.WriteLine( It.Is<string>( s =>
-            s.Contains( "A атакует B и наносит 9 урона" ) ) ), Times.Exactly( 6 ) ); // 6 раз, пока B не умрёт
+            s.Contains( fighterAMessage ) ) ), Times.Exactly( 6 ) ); // 6 раз, пока B не умрёт
         envMock.Verify( e => e.WriteLine( It.Is<string>( s =>
-            s.Contains( "B атакует A и наносит 9 урона" ) ) ), Times.Exactly( 5 ) ); // 5 раз (в 6-м раунде B уже мёртв)
+            s.Contains( fighterBMessage ) ) ), Times.Exactly( 5 ) ); // 5 раз (в 6-м раунде B уже мёртв)
 
         // Итоговое объявление победителя
         envMock.Verify( e => e.WriteLine( It.Is<string>( s =>
-            s.Contains( "A выживает и побеждает!" ) ) ), Times.Once );
+            s.Contains( ApplicationMessages.ArenaWinner( fighterA.Name ) ) ) ), Times.Once );
     }
 
     [Fact]
@@ -355,8 +354,8 @@ public class ArenaServiceTests
         // Act
         arena.SimulateBattle();
 
-        // Урон 8 за раунд (10*0.8), здоровье 10000
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Лимит раундов исчерпан." ) ) ), Times.Once );
+        // Проверяем, что C не получил урона и выиграл.
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaMaxRoundsExhausted( fighterC.Name ) ), Times.Once );
         // Все трое живы
         Assert.True( fighterA.GetCurrentHealth() > 0 && fighterB.GetCurrentHealth() > 0 && fighterC.GetCurrentHealth() > 0 );
     }
@@ -385,9 +384,128 @@ public class ArenaServiceTests
         arena.RemoveFighter();
 
         // Assert: было 3 сообщения об ошибке, затем удаление
-        envMock.Verify( e => e.WriteLine( "Введите число от 1 до 2." ), Times.Exactly( 3 ) );
-        envMock.Verify( e => e.WriteLine( It.Is<string>( s => s.StartsWith( "Боец под номером" ) ) ), Times.Once );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ErrorNumberOutOfRange( 1, 2 ) ), Times.Exactly( 3 ) );
+        envMock.Verify( e => e.WriteLine( ApplicationMessages.ArenaFighterRemoved( 1 ) ), Times.Once );
         Assert.Single( arena.Fighters );
+    }
+
+    [Fact]
+    public void SimulateBattle_HigherInitiativeFighterAttacksFirst()
+    {
+        // Arrange
+        var envMock = new Mock<IEnvironmentService>();
+        var randMock = new Mock<IRandomService>();
+
+        randMock.Setup( r => r.Next( It.IsAny<int>() ) ).Returns( 0 );
+        randMock.SetupSequence( r => r.NextDouble() )
+                .Returns( 0.0 )
+                .Returns( 0.5 )
+                .Returns( 0.0 )
+                .Returns( 0.5 );
+
+        var arena = new ArenaService( envMock.Object, randMock.Object );
+        var fast = new FighterBuilder()
+            .WithName( "Fast" )
+            .WithRaceStats( health: 100, damage: 100, armor: 0, initiative: 20 )
+            .Build();
+
+        var slow = new FighterBuilder()
+            .WithName( "Slow" )
+            .WithRaceStats( health: 100, damage: 10, armor: 0, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( slow );
+        arena.AddFighter( fast );
+
+        // Act
+        arena.SimulateBattle();
+
+        // Assert
+        var messages = envMock.Invocations
+            .Where( i => i.Method.Name == nameof( IEnvironmentService.WriteLine ) )
+            .Select( i => i.Arguments[ 0 ]?.ToString() )
+            .ToList();
+
+        string fastAttacksMessage = ApplicationMessages.ArenaAttackMessage( fast.Name, slow.Name, 80, false );
+        string slowAttacksMessage = ApplicationMessages.ArenaAttackMessage( slow.Name, fast.Name, 8, false );
+
+        Assert.NotNull( messages );
+        Assert.Contains( fastAttacksMessage, messages );
+        Assert.Contains( slowAttacksMessage, messages );
+
+        int fastIndex = messages.FindIndex( m => m != null && m == fastAttacksMessage );
+        int slowIndex = messages.FindIndex( m => m != null && m == slowAttacksMessage );
+
+        Assert.True( fastIndex >= 0 && slowIndex >= 0 && fastIndex < slowIndex );
+    }
+
+    [Fact]
+    public void SimulateBattle_AfterBattle_FightersListCleared()
+    {
+        // Arrange
+        var envMock = new Mock<IEnvironmentService>();
+        var randMock = new Mock<IRandomService>();
+
+        randMock.Setup( r => r.Next( It.IsAny<int>() ) ).Returns( 0 );
+        randMock.Setup( r => r.NextDouble() ).Returns( 0.5 );
+
+        var arena = new ArenaService( envMock.Object, randMock.Object );
+
+        var f1 = new FighterBuilder()
+            .WithName( "A" )
+            .WithRaceStats( health: 100, damage: 100, armor: 0, initiative: 10 )
+            .Build();
+
+        var f2 = new FighterBuilder()
+            .WithName( "B" )
+            .WithRaceStats( health: 50, damage: 10, armor: 0, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( f1 );
+        arena.AddFighter( f2 );
+
+        // Act
+        arena.SimulateBattle();
+
+        // Assert
+        Assert.Empty( arena.Fighters );
+    }
+
+    [Fact]
+    public void SimulateBattle_CriticalHit_WritesCriticalMessageAndDoublesDamage()
+    {
+        // Arrange
+        var envMock = new Mock<IEnvironmentService>();
+        var randMock = new Mock<IRandomService>();
+
+        randMock.Setup( r => r.Next( It.IsAny<int>() ) ).Returns( 0 );
+        randMock.SetupSequence( r => r.NextDouble() )
+                .Returns( 0.8 )
+                .Returns( 0.05 ) // крит удар
+                .Returns( 0.8 )
+                .Returns( 0.5 );
+
+        var arena = new ArenaService( envMock.Object, randMock.Object );
+        var attacker = new FighterBuilder()
+            .WithName( "Crit" )
+            .WithRaceStats( health: 100, damage: 20, armor: 0, initiative: 10 )
+            .Build();
+
+        var target = new FighterBuilder()
+            .WithName( "Victim" )
+            .WithRaceStats( health: 100, damage: 1, armor: 10, initiative: 5 )
+            .Build();
+
+        arena.AddFighter( attacker );
+        arena.AddFighter( target );
+
+        // Act
+        arena.SimulateBattle();
+
+        // Assert
+        // После крита урон = 10 * 2 = 20
+        string critAttackMessage = ApplicationMessages.ArenaAttackMessage( attacker.Name, target.Name, 20, true );
+        envMock.Verify( e => e.WriteLine( critAttackMessage ), Times.Once );
     }
 
     private static void SetupFixedNonCriticalDamage( Mock<IRandomService> randMock, double factor = 0.5 )

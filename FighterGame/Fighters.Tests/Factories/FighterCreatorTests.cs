@@ -2,6 +2,7 @@
 using Fighters.Services.Environment;
 using Fighters.Factories;
 using Moq;
+using Fighters.Utils;
 
 namespace Fighters.Tests.Factories;
 
@@ -37,10 +38,10 @@ public class FighterCreatorTests
         Assert.Equal( expectedArmor, fighter.CalculateArmor() );
         Assert.Equal( expectedInitiative, fighter.GetInitiative() );
 
-        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите расу" ) ) ), Times.Once );
-        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите класс" ) ) ), Times.Once );
-        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите оружие" ) ) ), Times.Once );
-        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( "Выберите броню" ) ) ), Times.Once );
+        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.CreatorCharacterRace ) ) ), Times.Once );
+        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.CreatorCharacterClass ) ) ), Times.Once );
+        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.CreatorCharacterWeapon ) ) ), Times.Once );
+        env.Verify( e => e.WriteLine( It.Is<string>( s => s.Contains( ApplicationMessages.CreatorCharacterArmor ) ) ), Times.Once );
     }
 
     public static TheoryData<string[], string, int, int, int, int> ValidInputsData()
@@ -160,7 +161,7 @@ public class FighterCreatorTests
         // Тест на расу
         data.Add(
             [ "Hero", "abc", "-1", "3", "1", "0", "0", "0" ],
-            "Введите число от 0 до 2.",
+            ApplicationMessages.ErrorNumberOutOfRange( 0, 2 ),
             3,
             110 + 30,   // Ghoul health 110 + LegionSoldier health 30
             6 + 12 + 8, // Ghoul 6 + LegionSoldier 12 + Fists 8
@@ -171,7 +172,7 @@ public class FighterCreatorTests
         // Тест на класс
         data.Add(
             [ "Knight", "0", "", "4", "2", "0", "0" ],
-            "Введите число от 0 до 3.",
+            ApplicationMessages.ErrorNumberOutOfRange( 0, 3 ),
             2,
             100 + 40,   // Human 100 + Knight 40
             5 + 8 + 8,  // Human 5 + Knight 8 + Fists 8
@@ -182,7 +183,7 @@ public class FighterCreatorTests
         // Тест на оружие
         data.Add(
             [ "Warrior", "0", "0", "10", "1", "0" ],
-            "Введите число от 0 до 2.",
+            ApplicationMessages.ErrorNumberOutOfRange( 0, 2 ),
             1,
             100 + 30,    // Human 100 + LegionSoldier 30
             5 + 12 + 20, // Human 5 + LegionSoldier 12 + Axe 20
@@ -193,12 +194,65 @@ public class FighterCreatorTests
         // Тест на броню
         data.Add(
             [ "Tank", "0", "0", "0", "-5", "4", "2" ],
-            "Введите число от 0 до 3.",
+            ApplicationMessages.ErrorNumberOutOfRange( 0, 3 ),
             2,
             100 + 30,   // Human + LegionSoldier
             5 + 12 + 8, // Human 5 + LegionSoldier 12 + Fists 8
             2 + 6 + 15, // Human 2 + LegionSoldier 6 + CombatArmor 15
             10 + 12     // Human + LegionSoldier
+        );
+
+        return data;
+    }
+
+    [Theory]
+    [MemberData( nameof( InvalidNameData ) )]
+    public void CreateFighter_InvalidName_RetriesUntilValid(
+        IReadOnlyList<string> allInputs,
+        int expectedErrorCount,
+        string expectedFinalName )
+    {
+        // Arrange
+        var env = new Mock<IEnvironmentService>();
+        var sequence = env.SetupSequence( e => e.ReadLine() );
+        foreach ( var input in allInputs )
+        {
+            sequence.Returns( input );
+        }
+
+        var creator = new FighterCreator( env.Object );
+
+        // Act
+        IFighter fighter = creator.CreateFighter();
+
+        // Assert
+        Assert.Equal( expectedFinalName, fighter.Name );
+        env.Verify( e => e.WriteLine( ApplicationMessages.ErrorEmptyName ), Times.Exactly( expectedErrorCount ) );
+    }
+
+    public static TheoryData<string[], int, string> InvalidNameData()
+    {
+        var data = new TheoryData<string[], int, string>();
+
+        // Однократная ошибка
+        data.Add(
+            [ "", "Legion", "0", "0", "0", "0" ],
+            1,
+            "Legion"
+        );
+
+        // Однократная ошибка: только пробелы
+        data.Add(
+            [ "   ", "Hero", "0", "0", "0", "0" ],
+            1,
+            "Hero"
+        );
+
+        // Две ошибки
+        data.Add(
+            [ "", "   ", "Legion", "0", "0", "0", "0" ],
+            2,
+            "Legion"
         );
 
         return data;

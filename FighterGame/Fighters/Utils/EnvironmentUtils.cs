@@ -13,7 +13,7 @@ public static class EnvironmentUtils
                 return value;
             }
 
-            env.WriteLine( $"Введите число от {min} до {max}." );
+            env.WriteLine( ApplicationMessages.ErrorNumberOutOfRange( min, max ) );
         }
     }
 
@@ -27,7 +27,7 @@ public static class EnvironmentUtils
                 return line;
             }
 
-            env.WriteLine( "Имя не может быть пустым." );
+            env.WriteLine( ApplicationMessages.ErrorEmptyName );
         }
     }
 }
